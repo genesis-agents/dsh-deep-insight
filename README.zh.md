@@ -23,10 +23,10 @@ kind: package-reference
 
 ## 安装
 
-需要 Node 24.9 或更新版本、DeepSeek Harness 0.2.2-rc.1、uv 和 Python 3.13。请下载本仓库 Releases 中的预构建压缩包，通过 DSH 插件管理器安装，并将下方路径替换为下载文件的实际路径。
+需要 Node 24.9 或更新版本、DeepSeek Harness 0.2.2-rc.1、uv 和 Python 3.13。通过 DSH 插件管理器安装已发布的 npm 包，也可使用 Releases 中的压缩包。
 
 ```sh
-dsh plugin --profile web add /absolute/path/dsh-deep-insight-0.2.0-alpha.33.tgz
+dsh plugin --profile web add dsh-deep-insight@0.2.0-alpha.34
 dsh plugin --profile web exec node node_modules/dsh-deep-insight/scripts/setup-engine.mjs --profile web
 dsh --profile web
 ```
@@ -52,6 +52,8 @@ allowBuilds:
 知识结构化将已保存的节点和有向关系呈现为交互图谱，提供关联布局与环形布局。节点大小表示关联数量，选择节点后高亮其邻接关系。关系文字可以切换显示，全屏时证据详情与图谱并排呈现。可以搜索节点名称或关系，缩放、平移，并选择节点或关系查看其证据。节点选择框和列表支持键盘操作，保留完整名称与孤立节点。图谱渲染失败时可以重试或使用列表；已有结果无需重新生成。生成的关系仍属于未经独立复核的分析。
 
 每条证据引文直接呈现为一个引用块，保留原文措辞。长引文默认收起为四行，可以展开；来源上下文通过原文详情入口单独查看。
+
+同一项目和来源的多次采集，在原件字节和提取文档相同时共用一个材料目录，每次采集的来源记录仍保留在材料历史中；内容变化的版本单独保留。刷新时，旧阅读副本归档到 outputs/reading-room/superseded-material-views，原件、数据库记录和不可变阅读版本保持保留。
 
 <a id="model-experience"></a>
 

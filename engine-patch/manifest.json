@@ -192,6 +192,32 @@
       "previousSha256": [
         ""
       ]
+    },
+    {
+      "path": "src/insight/adapters/export/reading.py",
+      "sha256": "9c8b1324568330783aedaa3d320547ecf4e60a81aaf4e9c8d0dedd8b64b57a55",
+      "baseSha256": "2460eac5b92123d9d51d462a3652d82d259a5fe983818279da888543301c65b8",
+      "previousSha256": [
+        "62cddb5de4e457af3556d2919175d934e20bc3174609f752909eea986e35478f"
+      ]
+    },
+    {
+      "path": "src/insight/adapters/export/project_workspace.py",
+      "sha256": "7167b9588fde737ab3dcf119207c6a475e68340bc6a9a542913eb616c6affb0a",
+      "baseSha256": "8328dde5d6c9b9dc4216450148d2339402839093aab005c198abaf6cb12606cd",
+      "previousSha256": [
+        "477726d70b3d69e0e9389615dc946a21ddac270e35f43263751594f668934ca3",
+        "2bf4bd55fd46d9119421679ede697174a31810be53135bc615b8d9ee3efc93ad",
+        "c7117adf6d682be110c56e49c81823ce9ee1c0ffb3715539c818c97380169f73"
+      ]
+    },
+    {
+      "path": "tests/e2e/test_reading_dedup.py",
+      "sha256": "fc0221da02e1220fb1155385c994ff523b31cd224c932c398f75f5aa088910f3",
+      "baseSha256": null,
+      "previousSha256": [
+        "a1eb0399c0ef7847cf4d98b24602600064c235dec03190e20c0179cfe16cf181"
+      ]
     }
   ]
 }

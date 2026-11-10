@@ -23,10 +23,10 @@ Deep insight adds a research workflow to the current DeepSeek Harness conversati
 
 ## Install
 
-Requires Node 24.9 or newer, DeepSeek Harness 0.2.2-rc.1, uv and Python 3.13. Install the prebuilt tarball from this repository's Releases through the supported DSH plugin manager; replace the archive path below with the downloaded file.
+Requires Node 24.9 or newer, DeepSeek Harness 0.2.2-rc.1, uv and Python 3.13. Install the published npm package through the supported DSH plugin manager. Release archives are also available.
 
 ```sh
-dsh plugin --profile web add /absolute/path/dsh-deep-insight-0.2.0-alpha.33.tgz
+dsh plugin --profile web add dsh-deep-insight@0.2.0-alpha.34
 dsh plugin --profile web exec node node_modules/dsh-deep-insight/scripts/setup-engine.mjs --profile web
 dsh --profile web
 ```
@@ -52,6 +52,8 @@ Node details scroll independently and close by folding the docked sidebar. Title
 Knowledge structuring displays saved nodes and directed relations as an interactive graph with relationship and circle layouts. Node size reflects connection count; selecting a node highlights its neighborhood. Relation labels can be toggled, and fullscreen places evidence details beside the graph. Search node labels or relations, zoom and pan, and select a node or relation to inspect its evidence. The node selector and list provide keyboard access, full labels and isolated nodes. If graph rendering fails, retry or use the list; existing results do not require regeneration. Generated relations remain unreviewed analysis.
 
 Each evidence quotation renders as one quote block with its original wording. Long quotations collapse to four lines and can be expanded. Source context opens separately through the original-evidence link.
+
+Acquisitions from the same source and project share one material folder when original bytes and extracted documents match. Each acquisition keeps its source record under the material's history. Changed content remains separate. Refresh archives superseded reading copies under outputs/reading-room/superseded-material-views; originals, database records and immutable reading editions remain intact.
 
 <a id="model-experience"></a>
 

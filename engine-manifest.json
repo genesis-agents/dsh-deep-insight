@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "99c955a46c73a082",
+  "id": "8a9e5383c986727d",
   "engineVersion": "0.1.5",
   "sourceRevision": "6f01c9fb4aeab0cbee25438afb29c1b623a18636",
   "files": [
@@ -42,7 +42,7 @@
     },
     {
       "path": "src/insight/adapters/export/project_workspace.py",
-      "sha256": "8328dde5d6c9b9dc4216450148d2339402839093aab005c198abaf6cb12606cd"
+      "sha256": "7167b9588fde737ab3dcf119207c6a475e68340bc6a9a542913eb616c6affb0a"
     },
     {
       "path": "src/insight/adapters/export/publisher.py",
@@ -54,7 +54,7 @@
     },
     {
       "path": "src/insight/adapters/export/reading.py",
-      "sha256": "2460eac5b92123d9d51d462a3652d82d259a5fe983818279da888543301c65b8"
+      "sha256": "9c8b1324568330783aedaa3d320547ecf4e60a81aaf4e9c8d0dedd8b64b57a55"
     },
     {
       "path": "src/insight/adapters/export/templates/project.html",
@@ -298,7 +298,7 @@
     }
   ],
   "artifact": {
-    "url": "https://github.com/genesis-agents/dsh-deep-insight/releases/download/v0.2.0-alpha.30/dsh-deep-insight-0.2.0-alpha.30.tgz",
-    "integrity": "sha512-wJL1SAe5vG5kclOadtrsS3g1M+Og3ZGZBdJ16jXUeU7gmv4g79Fzbt+bmnfconOLuIL66fYbrYlIc2lcyMceHw=="
+    "url": "https://github.com/genesis-agents/dsh-deep-insight/releases/download/v0.2.0-alpha.34/deep-insight-engine-alpha34.tgz",
+    "integrity": "sha512-OBuLlwrBBI9AXcsrie6Mk+D3XbkN8fLHImHrpl0vmxexDMjNv8V8A89xN5j52IgJ/rlODoOr4LB0f+g3peCJlA=="
   }
 }
