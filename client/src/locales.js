@@ -1,6 +1,12 @@
 /** Locale-owned research UI copy; research content retains its source language. */
 import React from 'react'
 export const en = {
+  citationExpand:'Show full quotation',citationCollapse:'Collapse quotation',
+  graphLabels:'Relation labels',
+  graphInspector:'Knowledge details',graphNodeKind:'Node',graphEdgeKind:'Relation',graphInspectHeading:'Follow the evidence',graphInspectHelp:'Select a node to explore its connections, or select a relation to read the exact supporting evidence.',graphConnected:'Connected',graphIndependent:'Independent',graphSizeHelp:'Node size reflects connection count',
+  graphLayout:'Layout',graphForce:'Group related nodes',graphCircle:'Circle',
+  graphFullscreen:'View fullscreen',graphExitFullscreen:'Exit fullscreen',graphFullscreenFailed:'Fullscreen is unavailable. Use the graph zoom controls or try fullscreen again.',
+  graphTitle:'Knowledge graph',graphList:'List',graphView:'Knowledge display',graphSearch:'Search nodes or relations',graphMatches:'Matching graph',graphEmpty:'This result contains no knowledge nodes. Add evidence or run this step again.',graphNoMatch:'No matching nodes or relations. Change the search to see more.',graphSelect:'Inspect a node',graphChoose:'Choose a node',graphSelection:'Selected knowledge',graphClear:'Clear selection',graphRelated:'Related relations',graphIsolated:'This node has no recorded relations.',graphNodeList:'Nodes and evidence',graphEdgeList:'Relations and evidence',graphNoEdges:'No relations are recorded between these nodes.',graphNavigation:'Graph navigation',graphZoomIn:'Zoom in',graphZoomOut:'Zoom out',graphFit:'Fit graph',graphFailed:'The graph could not be displayed. Use the list to inspect nodes, relations and evidence, or retry.',graphRetry:'Retry graph',graphHelp:'Drag the background to pan, drag nodes to rearrange, and pinch to zoom. Select a node or relation to inspect evidence. You can also use the node selector or list with a keyboard.',
   collectionNotes:'Collection notes',technicalDetails:'Technical files and details',fileReportHtml:'Read report',fileReportText:'Report text',
   preparingWorkspace:'Preparing project folder…',action_reading_room:'Refresh readable project files',
   videoShow:'Show video',videoHide:'Hide video',videoOriginal:'Open original video',videoPlayer:'Source video player',videoSeek:'Jump to',videoExternalNote:'The player streams the original online video. If embedding is unavailable, open the original video.',videoFailed:'Playback failed. Open the original video to check access or availability.',
@@ -257,6 +263,12 @@ export const en = {
 }
 /** @satisfies {Record<keyof typeof en, string>} */
 export const zh = {
+  citationExpand:'展开完整引文',citationCollapse:'收起引文',
+  graphLabels:'关系文字',
+  graphInspector:'知识详情',graphNodeKind:'知识节点',graphEdgeKind:'知识关系',graphInspectHeading:'从关联追溯证据',graphInspectHelp:'选择节点探索关联，或选择连线查看支撑这条关系的原文证据',graphConnected:'关联节点',graphIndependent:'独立节点',graphSizeHelp:'节点大小表示关联数量',
+  graphLayout:'布局',graphForce:'关联布局',graphCircle:'环形布局',
+  graphFullscreen:'全屏查看',graphExitFullscreen:'退出全屏',graphFullscreenFailed:'暂时无法全屏，请使用图谱缩放按钮或重新尝试全屏',
+  graphTitle:'知识图谱',graphList:'列表',graphView:'知识呈现方式',graphSearch:'搜索节点或关系',graphMatches:'匹配结果',graphEmpty:'此结果没有知识节点，请补充证据或重新执行本环节',graphNoMatch:'没有匹配的节点或关系，请调整搜索内容',graphSelect:'查看节点',graphChoose:'选择节点',graphSelection:'已选知识详情',graphClear:'清除选择',graphRelated:'相关关系',graphIsolated:'此节点尚无已记录的关系',graphNodeList:'节点与证据',graphEdgeList:'关系与证据',graphNoEdges:'这些节点之间尚无已记录的关系',graphNavigation:'图谱导航',graphZoomIn:'放大图谱',graphZoomOut:'缩小图谱',graphFit:'适应画布',graphFailed:'图谱显示失败，可切换列表查看节点、关系与证据，或重试',graphRetry:'重试图谱',graphHelp:'拖动画布平移，拖动节点调整位置，双指缩放。选择节点或关系查看证据，也可通过节点选择框或列表使用键盘操作',
   collectionNotes:'采集说明',technicalDetails:'技术文件与详情',fileReportHtml:'阅读报告',fileReportText:'报告文本',
   preparingWorkspace:'正在整理项目目录…',action_reading_room:'整理项目阅读目录',
   videoShow:'观看视频',videoHide:'收起视频',videoOriginal:'在原视频中打开',videoPlayer:'来源视频播放器',videoSeek:'跳转至',videoExternalNote:'播放器读取在线原视频；若平台限制内嵌播放，请打开原视频。',videoFailed:'视频播放失败，请打开原视频检查访问权限或可用性。',

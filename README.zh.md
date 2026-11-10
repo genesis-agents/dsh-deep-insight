@@ -26,7 +26,7 @@ kind: package-reference
 需要 Node 24.9 或更新版本、DeepSeek Harness 0.2.2-rc.1、uv 和 Python 3.13。请下载本仓库 Releases 中的预构建压缩包，通过 DSH 插件管理器安装，并将下方路径替换为下载文件的实际路径。
 
 ```sh
-dsh plugin --profile web add /absolute/path/dsh-deep-insight-0.2.0-alpha.31.tgz
+dsh plugin --profile web add /absolute/path/dsh-deep-insight-0.2.0-alpha.33.tgz
 dsh plugin --profile web exec node node_modules/dsh-deep-insight/scripts/setup-engine.mjs --profile web
 dsh --profile web
 ```
@@ -48,6 +48,10 @@ allowBuilds:
 向 Agent 提出研究问题。deep_insight 工具的 guide 操作提供流程与输入格式。对话的“深度洞察”页呈现已保存的来源、证据、分析和交付检查。各对话使用独立研究工作区，配置中的内核可供同一配置下的对话共用。
 
 节点详情独立滚动，关闭时折叠停靠侧栏。主标题 20px、小节标题 18px、正文与引文 16px、辅助信息 14px。执行历史有统一入口。报告通过句内角标链接证据，原始图表放在说明旁。可读研究目录包含任务、原始资料、证据、分析、成果、更新记录和概览。
+
+知识结构化将已保存的节点和有向关系呈现为交互图谱，提供关联布局与环形布局。节点大小表示关联数量，选择节点后高亮其邻接关系。关系文字可以切换显示，全屏时证据详情与图谱并排呈现。可以搜索节点名称或关系，缩放、平移，并选择节点或关系查看其证据。节点选择框和列表支持键盘操作，保留完整名称与孤立节点。图谱渲染失败时可以重试或使用列表；已有结果无需重新生成。生成的关系仍属于未经独立复核的分析。
+
+每条证据引文直接呈现为一个引用块，保留原文措辞。长引文默认收起为四行，可以展开；来源上下文通过原文详情入口单独查看。
 
 <a id="model-experience"></a>
 

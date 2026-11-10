@@ -5,12 +5,14 @@ import vm from 'node:vm'
 import {JSDOM} from 'jsdom'
 import {createRequire} from 'node:module'
 import {state} from './research-fixture.js'
+import {knowledgeRecord} from './knowledge-fixture.js'
 
 test('one workflow opens distinct node data in one host sidebar and retains report evidence',{timeout:15000},async t=>{
  const dom=new JSDOM('<html><body></body></html>',{url:'http://localhost:3081'}),previous=new Map()
+ dom.window.HTMLCanvasElement.prototype.getContext=()=>null
  for(const [key,value] of Object.entries({window:dom.window,document:dom.window.document,navigator:dom.window.navigator,HTMLElement:dom.window.HTMLElement})){previous.set(key,Object.getOwnPropertyDescriptor(globalThis,key));Object.defineProperty(globalThis,key,{configurable:true,value})}
  const require=createRequire(import.meta.url),React=require('react'),{render,fireEvent,waitFor,cleanup,act}=require('@testing-library/react'),entries=[],dicts={},polls=[],opened=[],folderCalls=[]
- let plugin,fail=false,navigation,closed=0,hidden=[]
+ let plugin,fail=false,navigation,closed=0,hidden=[],graphRecord=structuredClone(knowledgeRecord)
  const fixture=structuredClone(state)
  fixture.capabilityCatalog=['dedup','normalize','entities','structure','vectors','trend','benchmark','impact','knowledge','alerts']
  fixture.details[0].delivery=null
@@ -18,7 +20,7 @@ test('one workflow opens distinct node data in one host sidebar and retains repo
  fixture.details[0].events=[{kind:'source_image_archived',payload:{source_version_id:'v0',unit_index:1,image_artifact_id:'original-image',path:'.source-figures/original-image.png'}}]
  const ctx={locale:{register:(key,value)=>{dicts[key]=value;return()=>{}},bind:key=>name=>dicts[key].zh[name]},effect:fn=>fn(),slots:{inject:(_name,fn)=>fn(),register:(entry,component)=>{entries.push({...entry,component});return()=>{}}},sidebarRight:{hide:id=>hidden.push(id),openResourceIn:(sessionId,address,options)=>opened.push({sessionId,address,options})},sidebarRightTabs:{register:()=>()=>{}}}
  try{
-  vm.runInNewContext(readFileSync(new URL('../client/index.js',import.meta.url),'utf8'),{window:{location:dom.window.location,__ModuleLoader__:{load:({factory})=>{plugin=factory(()=>React)}}},document:dom.window.document,fetch:async(url,options)=>{if(url==='/open-in-app/apps')return{ok:true,json:async()=>({apps:['explorer']})};if(url==='/open-in-app/open'){folderCalls.push(JSON.parse(options.body));return{ok:true,json:async()=>({})}};if(fail)throw Error('Synthetic offline');if(options?.method==='POST'&&JSON.parse(options.body).action==='reading-room')return{ok:true,json:async()=>({result:{projectDirectory:'/fixture/project'}})};if(String(url).startsWith('/deep-insight/document?')){const version=new URL(url,'http://localhost').searchParams.get('version');const quotes=fixture.details[0].evidence.filter(item=>item.source_version_id===version);return {ok:true,json:async()=>({units:quotes.map(item=>({index:item.locator.unit_index,kind:'document',text:' '.repeat(item.locator.char_start??0)+item.quote+(item.quote.endsWith('。')?'':'.')})),warnings:[]})}};if(String(url).startsWith('/deep-insight/interpretation?'))return{ok:true,json:async()=>({record:null})};return{ok:true,json:async()=>structuredClone(fixture)}},AbortController,URL,console,setTimeout:fn=>{polls.push(fn);return polls.length},clearTimeout:()=>{},Date})
+  vm.runInNewContext(readFileSync(new URL('../client/index.js',import.meta.url),'utf8'),{window:{location:dom.window.location,__ModuleLoader__:{load:({factory})=>{plugin=factory(()=>React)}}},document:dom.window.document,fetch:async(url,options)=>{if(url==='/open-in-app/apps')return{ok:true,json:async()=>({apps:['explorer']})};if(url==='/open-in-app/open'){folderCalls.push(JSON.parse(options.body));return{ok:true,json:async()=>({})}};if(fail)throw Error('Synthetic offline');if(options?.method==='POST'&&JSON.parse(options.body).action==='reading-room')return{ok:true,json:async()=>({result:{projectDirectory:'/fixture/project'}})};if(String(url).startsWith('/deep-insight/document?')){const version=new URL(url,'http://localhost').searchParams.get('version');const quotes=fixture.details[0].evidence.filter(item=>item.source_version_id===version);return {ok:true,json:async()=>({units:quotes.map(item=>({index:item.locator.unit_index,kind:'document',text:' '.repeat(item.locator.char_start??0)+item.quote+(item.quote.endsWith('。')?'':'.')})),warnings:[]})}};if(String(url).startsWith('/deep-insight/capability?'))return{ok:true,json:async()=>structuredClone(graphRecord)};if(String(url).startsWith('/deep-insight/interpretation?'))return{ok:true,json:async()=>({record:null})};return{ok:true,json:async()=>structuredClone(fixture)}},AbortController,URL,console,setTimeout:fn=>{polls.push(fn);return polls.length},clearTimeout:()=>{},Date})
   plugin.apply(ctx)
   const panel=entries.find(entry=>entry.id==='deep-insight'),view=render(React.createElement(panel.component,panel.inject('fixture')))
   await waitFor(()=>assert.ok(view.getByRole('heading',{name:fixture.binding.question})))
@@ -55,8 +57,8 @@ test('one workflow opens distinct node data in one host sidebar and retains repo
   assert.equal(first.open,false)
   fireEvent.click(first.querySelector('summary'))
   await waitFor(()=>assert.equal(first.querySelectorAll('blockquote').length,2))
-  fireEvent.click(first.querySelectorAll('.tech-exact-citations>summary')[1])
-  fireEvent.click(first.querySelectorAll('.tech-exact-citations button')[1]);navigation=opened.at(-1)
+  assert.equal(first.querySelector('.tech-citation-reader ol'),null)
+  fireEvent.click(first.querySelectorAll('.tech-citation-actions button')[1]);navigation=opened.at(-1)
   assert.equal(navigation.options.params.deepInsight.nodeId,'evidence')
   assert.equal(navigation.options.params.deepInsight.recordId,extra.evidence_id)
   assert.equal(navigation.options.params.deepInsight.runId,'visual')
@@ -64,6 +66,23 @@ test('one workflow opens distinct node data in one host sidebar and retains repo
   assert.match(missing.textContent,/关联的证据记录缺失：.*missing-evidence/)
   assert.equal(missing.querySelectorAll('button').length,0)
   fixture.details[0].evidence.pop();claim.evidence_links=originalLinks
+  await act(async()=>{await panel.inject('fixture').feed.refresh()})
+  const savedQuote=fixture.details[0].evidence[0].quote
+  const longQuote=Array.from({length:12},(_,index)=>`Quoted paragraph ${index+1}. It contains a second complete sentence.`).join('\n\n')
+  fixture.details[0].evidence[0].quote=longQuote;claim.evidence_links=[{evidence_id:'e0',relation:'supports'}]
+  await act(async()=>{await panel.inject('fixture').feed.refresh()})
+  const single=pane.container.querySelector('.tech-evidence-group')
+  if(!single.open)fireEvent.click(single.querySelector('summary'))
+  assert.match(single.querySelector('summary').textContent,/1 条引文/)
+  assert.equal(single.querySelectorAll('blockquote').length,1)
+  assert.equal(single.querySelector('blockquote').textContent,longQuote)
+  assert.equal(single.querySelector('.tech-citation-reader ol'),null)
+  const expand=pane.getByRole('button',{name:'展开完整引文',exact:true})
+  assert.equal(expand.getAttribute('aria-expanded'),'false')
+  fireEvent.click(expand)
+  assert.equal(pane.getByRole('button',{name:'收起引文',exact:true}).getAttribute('aria-expanded'),'true')
+  assert.equal(single.querySelector('blockquote').textContent,longQuote)
+  fixture.details[0].evidence[0].quote=savedQuote;claim.evidence_links=originalLinks
   await act(async()=>{await panel.inject('fixture').feed.refresh()})
   choose('vectors');pane.rerender(React.createElement(sidebar.component,props()))
   assert.ok(pane.getByRole('button',{name:'等待当前操作结束'}).disabled)
@@ -73,6 +92,34 @@ test('one workflow opens distinct node data in one host sidebar and retains repo
   assert.equal(pane.queryByRole('heading',{name:'已保存的综合分析'}),null)
   choose('entities');pane.rerender(React.createElement(sidebar.component,props()))
   assert.ok(pane.getByText('本批次尚未生成此环节的结果'))
+  fixture.details[0].capabilities={structure:{id:graphRecord.id,status:'completed'}}
+  await act(async()=>{await panel.inject('fixture').feed.refresh()})
+  choose('structure');pane.rerender(React.createElement(sidebar.component,props()))
+  await waitFor(()=>assert.ok(pane.getByRole('button',{name:'列表',exact:true})))
+  // JSDOM has no canvas renderer; the same saved evidence stays reachable in the list.
+  await waitFor(()=>assert.ok(pane.getByRole('button',{name:'重试图谱'})))
+  fireEvent.click(pane.getByRole('button',{name:'列表',exact:true}))
+  assert.equal(pane.container.querySelectorAll('.tech-graph-list article').length,10)
+  fireEvent.change(pane.getByRole('combobox',{name:'查看节点'}),{target:{value:'isolated'}})
+  assert.ok(pane.getByText('此节点尚无已记录的关系'))
+  const selection=pane.getByRole('region',{name:'已选知识详情'})
+  fireEvent.click(selection.querySelector('summary'))
+  await waitFor(()=>assert.ok(selection.querySelector('blockquote')))
+  assert.match(selection.querySelector('blockquote').textContent,/合成验收引文 4/)
+  fireEvent.change(pane.getByRole('searchbox',{name:'搜索节点或关系'}),{target:{value:'版本定位'}})
+  assert.equal(pane.container.querySelectorAll('.tech-graph-list article').length,3)
+  assert.equal(pane.queryByRole('region',{name:'已选知识详情'}),null)
+  t.assert.snapshot({node:'structure',content:pane.container.querySelector('.tech-knowledge').textContent.replace(/\s+/g,' ').trim()})
+  fireEvent.click(pane.getByRole('button',{name:'原始材料 → 版本定位 → 原文证据'}))
+  assert.equal(pane.getByRole('region',{name:'已选知识详情'}).querySelectorAll('.tech-evidence-group').length,1)
+  fireEvent.change(pane.getByRole('searchbox',{name:'搜索节点或关系'}),{target:{value:'没有匹配'}})
+  assert.ok(pane.getByText('没有匹配的节点或关系，请调整搜索内容'))
+  graphRecord={...graphRecord,id:'empty-graph',result:{nodes:[],edges:[],limitations:[]}}
+  fixture.details[0].capabilities.structure={id:graphRecord.id,status:'completed'}
+  await act(async()=>{await panel.inject('fixture').feed.refresh()})
+  await waitFor(()=>assert.ok(pane.getByText('此结果没有知识节点，请补充证据或重新执行本环节')))
+  delete fixture.details[0].capabilities
+  await act(async()=>{await panel.inject('fixture').feed.refresh()})
   choose('report');pane.rerender(React.createElement(sidebar.component,props()))
   assert.ok(pane.getByRole('heading',{name:fixture.details[0].analysis.narrative.headline}))
   assert.ok(pane.getByText('Synthetic final conclusion',{exact:true}))

@@ -26,7 +26,7 @@ Deep insight adds a research workflow to the current DeepSeek Harness conversati
 Requires Node 24.9 or newer, DeepSeek Harness 0.2.2-rc.1, uv and Python 3.13. Install the prebuilt tarball from this repository's Releases through the supported DSH plugin manager; replace the archive path below with the downloaded file.
 
 ```sh
-dsh plugin --profile web add /absolute/path/dsh-deep-insight-0.2.0-alpha.31.tgz
+dsh plugin --profile web add /absolute/path/dsh-deep-insight-0.2.0-alpha.33.tgz
 dsh plugin --profile web exec node node_modules/dsh-deep-insight/scripts/setup-engine.mjs --profile web
 dsh --profile web
 ```
@@ -48,6 +48,10 @@ allowBuilds:
 Ask the agent to research a question. The deep_insight tool's guide action describes the workflow and input schemas. The conversation's Deep insight tab shows saved sources, evidence, analysis and delivery checks. Each conversation has a separate research workspace; the profile's configured engine can be shared.
 
 Node details scroll independently and close by folding the docked sidebar. Titles use 20px, section headings 18px, body text and quotations 16px, and metadata 14px. Execution history has a central entry. Reports link evidence with sentence-level superscripts; original figures accompany explanations. The readable project folder contains the task, original materials, evidence, analysis, deliverables, update history and an overview.
+
+Knowledge structuring displays saved nodes and directed relations as an interactive graph with relationship and circle layouts. Node size reflects connection count; selecting a node highlights its neighborhood. Relation labels can be toggled, and fullscreen places evidence details beside the graph. Search node labels or relations, zoom and pan, and select a node or relation to inspect its evidence. The node selector and list provide keyboard access, full labels and isolated nodes. If graph rendering fails, retry or use the list; existing results do not require regeneration. Generated relations remain unreviewed analysis.
+
+Each evidence quotation renders as one quote block with its original wording. Long quotations collapse to four lines and can be expanded. Source context opens separately through the original-evidence link.
 
 <a id="model-experience"></a>
 

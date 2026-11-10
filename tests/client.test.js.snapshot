@@ -14,12 +14,19 @@ exports[`one workflow opens distinct node data in one host sidebar and retains r
 
 exports[`one workflow opens distinct node data in one host sidebar and retains report evidence 3`] = `
 {
+  "node": "structure",
+  "content": "知识图谱5 个节点·5 条关系知识图谱列表搜索节点或关系匹配结果 · 2 个节点 · 1 条关系查看节点选择节点原始材料原文证据从关联追溯证据选择节点探索关联，或选择连线查看支撑这条关系的原文证据节点与证据原始材料[1] 合成验收资料 11 条引文原文证据[2] 合成验收资料 21 条引文关系与证据原始材料 → 版本定位 → 原文证据[1] 合成验收资料 11 条引文"
+}
+`;
+
+exports[`one workflow opens distinct node data in one host sidebar and retains report evidence 4`] = `
+{
   "node": "report",
   "content": "已有产物 · 待检查批次 1洞察报告目录洞察报告从材料到判断：可追溯研究的完整路径合成验收报告。验证工作流、图形、原始页面、章节目录与证据钻取；本页不代表真实研究结果。核心回答01证据完整性是研究交付的首要条件02可视化应揭示关系并支持追溯03结论必须披露适用条件和剩余不确定性范围与方法决策用途未登记地域未登记资料起始日未登记资料截止日未登记排除范围未登记报告依据已保存的来源与证据。日期缺失、来源依赖及未解决问题会限制结论的适用范围。01证据如何转化为可核查的判断？固定资料版本、保留原文定位，再将判断逐项连接到证据。固定资料：来源与版本原文证据：页码与引文研究判断：条件与核验原始资料页面 · 合成原始材料页面仅测试原图展示来源：合成验收资料 1不是研究材料02如何呈现具有正负方向的测量？保留统一零点、单位和原始数值，避免负数被错误隐藏。合成测量对比 基于引用材料绘制情景 A-5 %情景 B12 %仅为渲染验收数据总结与判断Synthetic final conclusion下一步建议Verify the stated conditions before use.限制与后续研究全部数据为验收样例，不作为事实引用引用来源合成验收资料 1验收样例机构 · 发布日期未登记合成验收资料 2验收样例机构 · 发布日期未登记合成验收资料 3验收样例机构 · 发布日期未登记合成验收资料 4验收样例机构 · 发布日期未登记合成验收资料 5验收样例机构 · 发布日期未登记合成验收资料 6验收样例机构 · 发布日期未登记合成验收资料 7验收样例机构 · 发布日期未登记合成验收资料 8验收样例机构 · 发布日期未登记合成验收资料 9验收样例机构 · 发布日期未登记合成验收资料 10验收样例机构 · 发布日期未登记"
 }
 `;
 
-exports[`one workflow opens distinct node data in one host sidebar and retains report evidence 4`] = `
+exports[`one workflow opens distinct node data in one host sidebar and retains report evidence 5`] = `
 {
   "node": "evidence",
   "content": "已有产物 · 待检查批次 1原文证据[1] 合成验收资料 11 条引文[2] 合成验收资料 21 条引文[3] 合成验收资料 31 条引文[4] 合成验收资料 41 条引文[5] 合成验收资料 51 条引文[6] 合成验收资料 61 条引文[7] 合成验收资料 71 条引文[8] 合成验收资料 81 条引文[9] 合成验收资料 91 条引文[10] 合成验收资料 101 条引文研究问题与证据关联此环节尚无已保存产物"
