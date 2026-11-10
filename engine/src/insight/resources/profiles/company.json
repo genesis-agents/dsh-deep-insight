@@ -1,0 +1,1 @@
+{"schema_version":1,"profile_id":"company","version":1,"dimensions":["products","strategy","execution","disclosures","risks"],"review_checks":["reporting_period_defined","disclosures_distinguished","causality_bounded","counterevidence_checked","numbers_and_figures_checked"]}

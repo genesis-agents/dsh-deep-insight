@@ -1,0 +1,34 @@
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write plugins/deep-insight/README.md
+/:
+  en: 04a9f1ec5e42bf1c
+  zh: 1b38ba14ce97665e
+/deep-insight:
+  en: cf89344a33e93dfc
+  zh: 20d3af4f64398100
+/deep-insight/summary:
+  en: f860c775d07815bc
+  zh: f8da731a9092cfe9
+/deep-insight/table-of-contents:
+  en: 38076073fe539a32
+  zh: fe961c212ef1565e
+/deep-insight/install:
+  en: 958d60089a37ccfb
+  zh: d6a075e74dc78f9c
+/deep-insight/use:
+  en: 2838cc1d0c0d5b67
+  zh: fc9e0d62dcdb2f4b
+/deep-insight/model-experience:
+  en: de2dd3a7bbd66afa
+  zh: bb2dd486ecfae454
+/deep-insight/limitations:
+  en: 5c8aafa5fddd29da
+  zh: 5c04cba36e9bdda6
+/deep-insight/development:
+  en: 022a401715487bd5
+  zh: 9e9562ec1c2cc8ef
+/deep-insight/dev-note:
+  en: aac555e4b8737709
+  zh: 733c89d6e15fb47c

@@ -1,0 +1,197 @@
+{
+  "upstream": "genesis-agents/auto-systems",
+  "revision": "6f01c9fb4aeab0cbee25438afb29c1b623a18636",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "1494e46156978f4dcd780af49ee64e7fdb6ee5278a76e5ef7afe5ed14d7009a9",
+      "baseSha256": "54c5b6c8aa5e0c72c8e339c9ea7f7063dc365b7d2027e72483f9242611178f50",
+      "previousSha256": [
+        "868d1966fa070eab57dae158355c61a033f36c9d3048019f32f226a443bddb29",
+        "b897c51fe97f058d3792026229f219a1509dfb6d8a495e5875db55a3a8049b4a"
+      ]
+    },
+    {
+      "path": "src/insight/adapters/export/narrative.py",
+      "sha256": "918fddf483eee3959e1e24862faf221cd5f1889ef15ee91d3cdfd450e1f14606",
+      "baseSha256": "ebbeca67e163675d33b137f567c2bb27f905e5fad0d91b1ee8699407f6de6f91",
+      "previousSha256": [
+        "5b2632e0c11b5af468935f71f286997cb818236866e914f16e3be5b9a4133a99",
+        "f941c445fbf182e7519f0726cdde3de7e92c337502695f1a72e460095c96569d"
+      ]
+    },
+    {
+      "path": "src/insight/adapters/export/templates/report.html",
+      "sha256": "6b87007ba4efc1cefb40f92ea42664de47434e1408ba6914b1638bc3e291f37b",
+      "baseSha256": "3e5ca379424177e098b1cbe6b67b21c4f5f95a05bc4017a2f248ac5ab8cc5343",
+      "previousSha256": [
+        "e54c10b1897d2a18fdfae2694aa5121737efbd389c42d489e6b648b3f922dbe8",
+        "4bf952b588fb076cc52803bfe29c313f71cd6ff9a38989b0ec2cefc0114ce998",
+        "0201666f6703cdbfb91c034029f504eaaecd859aeccc27d2a31c72089e16f8d6"
+      ]
+    },
+    {
+      "path": "src/insight/adapters/sources/http.py",
+      "sha256": "f6361d9bb5b828916386ae74735d86e3379393cf5d513506c2623a31bd15757d",
+      "baseSha256": "4ca02b0ab6e3c358fbe5e3c2daa5dcc801c28302066502780542ccdddf3de1fd"
+    },
+    {
+      "path": "src/insight/adapters/transforms/publication.py",
+      "sha256": "1be3520e26df6017bd075dcb2727facc8d28f98a7a65e2a90fb4779781181433",
+      "baseSha256": null,
+      "previousSha256": [
+        "511ae04d99db91a07fdb4421eb62a74fa7b7e9f8b8627bfdfd3f70e93cd19790"
+      ]
+    },
+    {
+      "path": "src/insight/application/delivery.py",
+      "sha256": "042f7b191c06f78c86a1d6ea0b820f4fc00ce0df2f95fe110875b49ca97f7cd0",
+      "baseSha256": "5a36fa116afaffa942721d28fbfaedeaf83fed388e90d7601a3d4c359b9efdb5",
+      "previousSha256": [
+        "0430a12c24fd7295f5ea3e86b776c1d6eb97cef6ee2521eae138be124b22e276"
+      ]
+    },
+    {
+      "path": "src/insight/application/research.py",
+      "sha256": "826d01ec68cb16cc207753b7d0cf3fee1e7b4202c46480f3c50ff349737cf615",
+      "baseSha256": "3fc520ee625dd75d3b5d7ec51aa2b64fa9e9c06f7c386e607141339d0da57fdf",
+      "previousSha256": [
+        "ebc549853ab7892fe62190a46ebdef12047ecac19f48649403b2e74867ac7ea8",
+        "16fd4d1f921da283d69cb5eebc1954e63f7c9fec30c3d20198d9ad269ccc6776",
+        "7d5f16f8d88c9898a4244a7afe928345e977d790e1a9b8db234bee4c8bfd013e",
+        "c374e142128d0bdda0b06a13838280d8c5d1be51a9956e7fe7588aa1e2a98cf6"
+      ]
+    },
+    {
+      "path": "src/insight/domain/assessment.py",
+      "sha256": "d2182d52c30f29ec32838ae9346ea99e8bc0c656ae920cb7e2915c270f68b7d7",
+      "baseSha256": null,
+      "previousSha256": [
+        "b9cef8e5377064c4dc11665b64988529cc36c7d3b5c1e2a05a1fe0d2d5cda09f",
+        "7453446550bd0ec33836b1c9d8bc9458494fd4268f12e042f8744465c21eaa9c",
+        "32a243b4797e8295bf8e97926b14448ba789a7a7a4cd8dff174963ecd62449b2"
+      ]
+    },
+    {
+      "path": "src/insight/domain/contracts.py",
+      "sha256": "26a94e768fc2c0ba058dc0f04b6cc550597445bbe9e2af0cdabd736c8f55fca1",
+      "baseSha256": "bcb15a1acd68b495848257ce2e39f748a6b81956fd0ccc70ac8714c1f7109aed",
+      "previousSha256": [
+        "bfd605d16d4ace7bc9cc7a003e4e127353ddc0cf3acfc2062659a81ef0ccff31"
+      ]
+    },
+    {
+      "path": "src/insight/domain/report_quality.py",
+      "sha256": "9bccf14ab25ac42a8aaebbbecfa1fe429cbbd3b8da6d0a21f2ea5144003d2388",
+      "baseSha256": null,
+      "previousSha256": [
+        "4fc273175a7a52e4de6502ab1ab1d34f4a85d7f9261a8c1a71845dd1dfa6e0e8",
+        "8e05c993e11ab5708f2f4d51023da1354214e6630b9d6a7cf81e582b8b5ac350",
+        "a5819083a72d421a386fd7b130e22deec5fa94d99567416e430f8a584ea6435f"
+      ]
+    },
+    {
+      "path": "src/insight/entrypoints/cli.py",
+      "sha256": "7e9f48a27534a276edeb80e8d91b58342de06abe27a66e3dd309772fdb6fb125",
+      "baseSha256": "bac3cc89406e70881fa587b4150dd11883faa029d73a7fd3613005820d8d3048",
+      "previousSha256": [
+        "b09ed242c8fe08cd6483b47f46fd05338cf4f621691bc41a576aec4f334541ee"
+      ]
+    },
+    {
+      "path": "tests/e2e/test_narrative_report.py",
+      "sha256": "c4bdd4c2e5e7f2f5d45ba996725f0d5fcac348bd1796310d19f6634b25fad379",
+      "baseSha256": "6a2f592c4538f1b40781be77c6117e53e341ff3c74680b37f664caa614cf5728",
+      "previousSha256": [
+        "2281140773f93cf0acb9feb59f6b6ea2daf2c731de811e54dc553500ae0e4d01",
+        "6cf8b9a3bc58777394e0984b53ff82d3b3566c07306d534de9dc8f2a65df3405"
+      ]
+    },
+    {
+      "path": "tests/e2e/test_reading_room.py",
+      "sha256": "924c2eb36e4039fb2477bb2ccf65a47590ce8df7e58944233d1c94e94f1d8ad2",
+      "baseSha256": "2035f3dffb896338d1e13f60061806b74701bfad443dfac121a10345f25e6fef",
+      "previousSha256": [
+        "c7be080c5257d3d286efd9db07e02aa6fd7a1b1aa3c847a35701ff15e03a9484"
+      ]
+    },
+    {
+      "path": "tests/e2e/test_report_composition.py",
+      "sha256": "b8408579bb0c439815de5d7c9d5a59101bb87a2cde4c9392d34d7cc53fb9e5ef",
+      "baseSha256": null,
+      "previousSha256": [
+        "eb27b4e99d1829e9af46f3b496d288bfaabf87cba143f56fd304699bedb51cd1",
+        "718a473e701664ccbf8f493626f6c49aca25c23562a041c83d39dfb3d8173911"
+      ]
+    },
+    {
+      "path": "tests/e2e/test_research_cycle.py",
+      "sha256": "f0eb6837cf3954f04266db1f974a0cfbcce82476414a22139dbb47040ea40a58",
+      "baseSha256": "d57d24cca1894b9ee90dffab9a54395156f48969eca374152fe88a96b6451de2",
+      "previousSha256": [
+        "2c698b67ca8266ced8905d64579411752025ab4aecc00033f1c64de05b4799bd"
+      ]
+    },
+    {
+      "path": "tests/e2e/test_research_readiness.py",
+      "sha256": "bd1a68bbff31920cbf396ec969e17b7e97063fecd73fd89a98bdf87dbe798013",
+      "baseSha256": null,
+      "previousSha256": [
+        "3b68f1272daa38ddedd04217f985d0e01099acd04b4234e8edac508dabd6e9ea",
+        "91bad749fd0ffd20328d1bd5d6d80694c5d70d724710d871a75c368c6123b67e",
+        "a6ffb9aada92ceed889d8fd756210c6a859089272e41d94f2bbd607e5adf53a4"
+      ]
+    },
+    {
+      "path": "tests/helpers.py",
+      "sha256": "15c24a1fd1935d6965ab8cfaf2760f959de3a26a8314c4f2dcdb123c47b5530f",
+      "baseSha256": "77d61512972de7369e3c5edf7b54366b58b21bb8f70c8fb9f7c17367a3bce6e4"
+    },
+    {
+      "path": "tests/integration/test_execution_and_parsers.py",
+      "sha256": "41d394b740799a7d89a349e3d07802e69118d743dc3dc50874451d5418d6a647",
+      "baseSha256": "30e7463bc8d5daf96ea564ca19c9f8d4c88db3d82e5ba75df4fec94df1eac4c8",
+      "previousSha256": [
+        "e8437cb344a47dd29aaf4f8e038545ee0347569caaa583ca5a387b98b7703157",
+        "f21d88c8f6738dd3f5c28fd12de8a43cfa534e8d0443c05d5f8da0966d7e0c3a"
+      ]
+    },
+    {
+      "path": "tests/unit/test_publication_dates.py",
+      "sha256": "292770e3320ffae2dc1028a2f8a081637db5269bf2bfcf9eeef4fc7b2fcc1136",
+      "baseSha256": null,
+      "previousSha256": [
+        "73d822d45310cfd0f53db0216c504052039d1640e859a3f5686027a66cfa487c"
+      ]
+    },
+    {
+      "path": "src/insight/application/source_images.py",
+      "baseSha256": null,
+      "sha256": "57180686341f141a0173d7f2ea71aadb930204942550e6ebbd4df28224f7a24c"
+    },
+    {
+      "path": "src/insight/adapters/export/publisher.py",
+      "baseSha256": "09829773eacd45c164fe42494fe3a815a008d2ea6e348c8024aa6ffe39039a1a",
+      "sha256": "d583225b03da2cef7a993d25eb33501780ad49ea1bd18ca6c8f14e8103880fff",
+      "previousSha256": [
+        "28a78dfa65e08450ea0e44c787e5b272c79b0b8375dea7b82e4f88b52d4d59b5"
+      ]
+    },
+    {
+      "path": "tests/e2e/test_source_images.py",
+      "baseSha256": null,
+      "sha256": "e8b1edbba42f839c84c30ee86535ed493ad096121056229b520b24edd2fc69b3",
+      "previousSha256": [
+        "b0b36225ac5f9001c1884afb490caed64fe98e33d347adbab72e504060a801b2"
+      ]
+    },
+    {
+      "path": "src/insight/adapters/export/templates/report_inline_blocks.html",
+      "sha256": "1a21e30309f18d80d1b86c16faab676a64f31f5cf84529007bdd7b151c12fefb",
+      "baseSha256": null,
+      "previousSha256": [
+        ""
+      ]
+    }
+  ]
+}

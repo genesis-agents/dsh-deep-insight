@@ -1,0 +1,4 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{ project_id }} 研究入口</title><style>body{max-width:900px;margin:40px auto;padding:20px;font:17px/1.9 system-ui,'Microsoft YaHei',sans-serif;color:#183048}a{color:#175b96}li{margin:10px 0}</style>
+<h1>{{ project_id }}</h1><p><a href="../../index.html">工作区总入口</a></p>
+<h2><a href="deliveries/{{ latest.delivery_id }}/index.html">打开最新报告</a></h2><p>质量状态：{{ latest.quality_state }} · {{ latest.created_at }}</p><p><a href="latest.json">最新版本指针</a></p>
+<h2>历史交付</h2><ul>{% for d in deliveries | reverse %}<li><a href="deliveries/{{ d.delivery_id }}/index.html">{{ d.created_at }}</a> · {{ d.quality_state }}</li>{% endfor %}</ul></html>

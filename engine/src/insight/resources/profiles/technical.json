@@ -1,0 +1,1 @@
+{"schema_version":1,"profile_id":"technical","version":1,"dimensions":["mechanism","architecture","baseline","conditions","engineering_limits"],"review_checks":["source_claims_distinguished","baseline_and_conditions","numbers_and_figures_checked","counterevidence_checked","independence_checked"]}
