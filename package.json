@@ -1,6 +1,6 @@
 {
   "name": "dsh-deep-insight",
-  "version": "0.2.0-alpha.30",
+  "version": "0.2.0-alpha.31",
   "description": "Evidence-based research workspaces and deliverables inside DeepSeek Harness",
   "type": "module",
   "main": "./src/index.js",
@@ -24,14 +24,17 @@
   ],
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "build:client": "node scripts/build-client.mjs"
+    "build:client": "node scripts/build-client.mjs",
+    "prepare:engine": "node scripts/prepare-engine.mjs",
+    "prepack": "node scripts/prepare-engine.mjs && node scripts/build-client.mjs"
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.0",
     "esbuild": "0.28.1",
     "jsdom": "^29.1.1",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "tar": "7.5.22"
   },
   "dependencies": {
     "@huggingface/transformers": "4.3.2",

@@ -6,7 +6,10 @@ import {resolve,join,isAbsolute} from 'node:path'
 import {spawn} from 'node:child_process'
 import {runtimeManifest,defaultEngineRoot} from '../src/runtime-paths.js'
 
-/** Verify and copy only manifest-owned engine files to the writable profile runtime. */
+/** Prepare the writable runtime without replacing modified files.
+ * @param profile - Existing installed profile directory.
+ * @returns Verified engine directory.
+ */
 export async function prepareEngine(profile){
  await access(join(profile.dir,'package.json'))
  const manifest=await runtimeManifest(),target=await defaultEngineRoot(profile)
@@ -24,7 +27,10 @@ export async function prepareEngine(profile){
  return target
 }
 
-/** Resolve an existing profile, synchronize its runtime, and create settings only when absent. */
+/** Synchronize an installed profile's runtime, retaining explicit settings.
+ * @param args - Profile selection and optional media dependency flag.
+ * @returns Completion after uv synchronization and initial settings creation.
+ */
 export async function setupEngine(args){
  let name,dir,media=false
  for(let i=0;i<args.length;i++){

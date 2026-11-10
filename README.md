@@ -26,14 +26,14 @@ Deep insight adds a research workflow to the current DeepSeek Harness conversati
 Requires Node 24.9 or newer, DeepSeek Harness 0.2.2-rc.1, uv and Python 3.13. Install the prebuilt tarball from this repository's Releases through the supported DSH plugin manager; replace the archive path below with the downloaded file.
 
 ```sh
-dsh plugin --profile web add /absolute/path/dsh-deep-insight-0.2.0-alpha.30.tgz
+dsh plugin --profile web add /absolute/path/dsh-deep-insight-0.2.0-alpha.31.tgz
 dsh plugin --profile web exec node node_modules/dsh-deep-insight/scripts/setup-engine.mjs --profile web
 dsh --profile web
 ```
 
 The setup command verifies the bundled engine files, copies them into a versioned writable profile directory and runs uv sync with the frozen lockfile. Existing explicit deep-insight.json settings remain unchanged; modified runtime files cause an error. Add --media to setup for the optional video-download dependency. PDF page rendering additionally requires pdftoppm.
 
-If pnpm reports ERR_PNPM_IGNORED_BUILDS, allow the two named dependencies in the installed profile's pnpm-workspace.yaml, then repeat installation:
+If pnpm reports ERR_PNPM_IGNORED_BUILDS, allow the two named dependencies in the installed profile's pnpm-workspace.yaml. Remove the failed package entry with `dsh plugin --profile web remove dsh-deep-insight`, then repeat installation; this also restores bundle activation after a partial install:
 
 ```yaml
 allowBuilds:

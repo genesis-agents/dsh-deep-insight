@@ -3,6 +3,22 @@ import { InsightError } from './engine.js'
 
 const workActions = new Set(['project', 'source-import', 'source-register', 'plan', 'run', 'worker', 'evidence', 'context', 'analysis', 'verification', 'search', 'review', 'deliver', 'resume'])
 
+/** Share native completion checks across MCP and standard DSH tool entrypoints.
+ * @param research - Session-bound research owner.
+ * @returns Dispatcher and independently releasable generation bindings.
+ */
+export function researchTurns(research){
+  const turns=new Map()
+  return {
+    call(actor,input,signal){return (turns.get(actor.sessionId)??research).call(actor,input,signal)},
+    open(actor,signal){
+      const turn=new ResearchTurn(research,actor,signal)
+      turns.set(actor.sessionId,turn)
+      return {turn,dispose(){if(turns.get(actor.sessionId)===turn)turns.delete(actor.sessionId)}}
+    },
+  }
+}
+
 /** Own only research attempted in this native generation; inspecting old work does not resume it. */
 export class ResearchTurn {
   constructor(research, actor, signal) {

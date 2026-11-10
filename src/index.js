@@ -7,7 +7,7 @@ import { openMcp } from './mcp.js'
 import { quantTools } from './quant-tools.js'
 import { QuantJournal } from './quant-journal.js'
 import { researchExecution } from './research-execution.js'
-import { ResearchTurn } from './research-turn.js'
+import { researchTurns } from './research-turn.js'
 import {Config,resolveCapabilityConfig} from './capability-config.js'
 import {ResearchCapabilities} from './capabilities.js'
 import {capabilityPorts,capabilityActor} from './capability-ports.js'
@@ -23,7 +23,7 @@ export function apply(ctx,config) {
   const research = new Research(ctx.profileContext, engine, researchExecution(ctx))
   const enrichment=resolveCapabilityConfig(config)
   research.capabilities=new ResearchCapabilities(research,enrichment,capabilityPorts(ctx,enrichment,lifetime.signal))
-  ctx.effect(()=>ctx.tools.register(managedResearchTool(ctx,research,lifetime.signal)),'deep-insight: standard research tool')
+  const turns=researchTurns(research)
   const quant = new QuantJournal(ctx.profileContext.dir)
   const connections = new Set()
   ctx.effect(function* () {
@@ -37,12 +37,15 @@ export function apply(ctx,config) {
     yield ctx.provide('localAgentMcp', {
       async open(input) {
         if (lifetime.signal.aborted) throw new Error('Research plugin is stopping')
-        const turn = new ResearchTurn(research, input, AbortSignal.any([input.signal, lifetime.signal]))
-        const connection = await openMcp(input, (actor, args, signal) => turn.call(actor, args, signal), lifetime.signal, quantTools(ctx, quant))
+        const binding = turns.open(input, AbortSignal.any([input.signal, lifetime.signal]))
+        let connection
+        try { connection = await openMcp(input, (actor, args, signal) => binding.turn.call(actor, args, signal), lifetime.signal, quantTools(ctx, quant)) }
+        catch(error){binding.dispose();throw error}
         connections.add(connection)
-        return { ...connection, completionRequirement: () => turn.completionRequirement(), dispose: async () => { try { await connection.dispose() } finally { connections.delete(connection) } } }
+        return { ...connection, completionRequirement: () => binding.turn.completionRequirement(), dispose: async () => { try { await connection.dispose() } finally { connections.delete(connection);binding.dispose() } } }
       },
     })
+    yield ctx.effect(()=>ctx.tools.register(managedResearchTool(ctx,turns,lifetime.signal)),'deep-insight: standard research tool')
   })
   const configPath = join(ctx.profileContext.dir, 'deep-insight.json')
   let busy = false

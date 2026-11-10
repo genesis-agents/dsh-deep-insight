@@ -26,14 +26,14 @@ kind: package-reference
 需要 Node 24.9 或更新版本、DeepSeek Harness 0.2.2-rc.1、uv 和 Python 3.13。请下载本仓库 Releases 中的预构建压缩包，通过 DSH 插件管理器安装，并将下方路径替换为下载文件的实际路径。
 
 ```sh
-dsh plugin --profile web add /absolute/path/dsh-deep-insight-0.2.0-alpha.30.tgz
+dsh plugin --profile web add /absolute/path/dsh-deep-insight-0.2.0-alpha.31.tgz
 dsh plugin --profile web exec node node_modules/dsh-deep-insight/scripts/setup-engine.mjs --profile web
 dsh --profile web
 ```
 
 安装脚本校验附带内核的文件，将其复制到配置目录内带版本的可写位置，并按冻结锁文件运行 uv sync。已有 deep-insight.json 显式配置保持不变；运行时文件被修改时会报错。需要视频下载依赖时，在安装命令后加 --media。PDF 原始页面渲染另需 pdftoppm。
 
-如果 pnpm 报 ERR_PNPM_IGNORED_BUILDS，请在所用配置目录的 pnpm-workspace.yaml 中允许以下两个依赖的安装脚本，然后重新执行安装：
+如果 pnpm 报 ERR_PNPM_IGNORED_BUILDS，请在所用配置目录的 pnpm-workspace.yaml 中允许以下两个依赖的安装脚本。用 `dsh plugin --profile web remove dsh-deep-insight` 移除失败的包记录，再重新安装，以恢复安装中断后的插件启用：
 
 ```yaml
 allowBuilds:

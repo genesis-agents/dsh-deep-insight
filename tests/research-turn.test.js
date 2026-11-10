@@ -1,6 +1,20 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { ResearchTurn } from '../src/research-turn.js'
+import { ResearchTurn, researchTurns } from '../src/research-turn.js'
+
+test('standard tool calls retain native generation completion checks and release only their own binding',async()=>{
+  const {research,controller}=fixture(),registry=researchTurns(research),actor={sessionId:'shared',preset:'workspace-write'}
+  const first=registry.open(actor,controller.signal)
+  await registry.call(actor,{action:'run',plan:'run-shared'},controller.signal)
+  assert.match(await first.turn.completionRequirement(),/Research is not complete/)
+  const second=registry.open(actor,controller.signal)
+  first.dispose()
+  await registry.call(actor,{action:'run',plan:'run-second'},controller.signal)
+  assert.equal(second.turn.runId,'run-second')
+  second.dispose()
+  await registry.call(actor,{action:'run',plan:'unbound'},controller.signal)
+  assert.equal(second.turn.runId,'run-second')
+})
 
 function fixture() {
   const controller = new AbortController(), actor = { sessionId: 'test', preset: 'workspace-write' }

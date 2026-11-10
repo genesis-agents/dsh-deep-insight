@@ -12,7 +12,12 @@ export function capabilityActor(ctx,sessionId){
  return researchActor(ctx,sessionId,agent)
 }
 
-/** Resolve the protected session identity, current model and permission preset from its agent. */
+/** Resolve the protected research actor.
+ * @param ctx - Host working-directory service.
+ * @param sessionId - Protected executing session identifier.
+ * @param agent - Executing agent with its model and permissions.
+ * @returns Actor derived from authoritative host state.
+ */
 export function researchActor(ctx,sessionId,agent){
  const permissions=agent.ctx.get('permissionPresets'),selection=agent.model.current()
  if(!permissions||!selection)throw new InsightError('AGENT_STATE_UNAVAILABLE','当前会话的权限或模型尚未就绪，请重新连接 Agent')

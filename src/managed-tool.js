@@ -6,7 +6,12 @@ import {InsightError} from './engine.js'
 
 const inputSchema=z.object({action:z.enum(researchActions),data:z.record(z.string(),z.unknown()).optional(),draft:z.boolean().optional(),expectedRevision:z.number().int().nonnegative().optional(),runId:z.string().optional(),version:z.string().optional(),plan:z.string().optional()}).strict()
 
-/** Create a model tool with pure UI presentation and cancellation coupled to its host. */
+/** Create a model tool with pure presentation and host cancellation.
+ * @param ctx - Host services used to resolve protected execution identity.
+ * @param research - Current research dispatcher.
+ * @param lifetime - Owning plugin's cancellation signal.
+ * @returns Standard DSH tool definition.
+ */
 export function managedResearchTool(ctx,research,lifetime){
  return {name:researchTool.name,description:researchTool.description,parameters:researchTool.inputSchema,
   output:{schema:{},render:(_args,value)=>[{type:'text',text:JSON.stringify(value)}]},

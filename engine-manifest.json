@@ -296,5 +296,9 @@
       "path": "uv.lock",
       "sha256": "c3591101c5bd2f3002ce49a9d3328a6071e61c14f880973a5af6eeddae49b64b"
     }
-  ]
+  ],
+  "artifact": {
+    "url": "https://github.com/genesis-agents/dsh-deep-insight/releases/download/v0.2.0-alpha.30/dsh-deep-insight-0.2.0-alpha.30.tgz",
+    "integrity": "sha512-wJL1SAe5vG5kclOadtrsS3g1M+Og3ZGZBdJ16jXUeU7gmv4g79Fzbt+bmnfconOLuIL66fYbrYlIc2lcyMceHw=="
+  }
 }
