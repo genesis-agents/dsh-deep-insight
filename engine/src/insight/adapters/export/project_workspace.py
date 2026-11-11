@@ -12,7 +12,6 @@ from urllib.parse import quote, unquote, urlparse
 from uuid import uuid4
 
 from bs4 import BeautifulSoup
-
 from insight.adapters.export.reading_html import (
     collection_table,
     esc,
@@ -65,6 +64,21 @@ class ProjectWorkspaceWriter:
             + str(PurePosixPath(c["path"]).parent.relative_to("资料库"))
             for c in cards.values()
         }
+        obsolete_material_views: set[Path] = set()
+        for card in cards.values():
+            material_parent = self.workspace / f"01-研究项目/{card['project']}/02-原始资料"
+            for old in card.get("legacy_folders", []):
+                candidate = material_parent / PurePosixPath(old).relative_to("资料库")
+                if not candidate.resolve().is_relative_to(material_parent.resolve()):
+                    raise PlatformError("INVALID_SPEC", "Historical material view escapes project")
+                canonical_folder = (
+                    self.workspace / material_roots[str(PurePosixPath(card["path"]).parent)]
+                )
+                if (
+                    candidate.resolve() != canonical_folder.resolve()
+                    and native_path(candidate).is_dir()
+                ):
+                    obsolete_material_views.add(candidate)
         run_labels: dict[str, str] = {}
         project_rounds: dict[str, int] = {}
         for run in runs:
@@ -79,8 +93,10 @@ class ProjectWorkspaceWriter:
             elif name == "阅读说明.md":
                 paths[name] = "00-工作区说明.md"
             elif name.startswith("资料库/"):
-                parent = str(PurePosixPath(name).parent)
-                paths[name] = material_roots[parent] + "/" + PurePosixPath(name).name
+                parent = next(root for root in material_roots if name.startswith(root + "/"))
+                paths[name] = (
+                    material_roots[parent] + "/" + str(PurePosixPath(name).relative_to(parent))
+                )
             else:
                 parts = PurePosixPath(name).parts
                 project = parts[1]
@@ -337,7 +353,9 @@ class ProjectWorkspaceWriter:
             additions += (
                 "<p>"
                 + relative_link(
-                    overview, source_overview, "查看信源总览：出处、方式、失败原因与原件"
+                    overview,
+                    source_overview,
+                    "查看信源总览：出处、方式、失败原因与原件",
                 )
                 + "</p><h2>直接打开成果</h2>"
             )
@@ -414,7 +432,9 @@ class ProjectWorkspaceWriter:
                         + "".join(
                             "<li>"
                             + relative_link(
-                                landing, p, str(PurePosixPath(p).relative_to(root + "/" + category))
+                                landing,
+                                p,
+                                str(PurePosixPath(p).relative_to(root + "/" + category)),
                             )
                             + "</li>"
                             for p in current
@@ -439,7 +459,9 @@ class ProjectWorkspaceWriter:
                             + "</ul></details>"
                         )
                     output[landing] = page(
-                        category, items, relative_link(landing, overview, "返回项目概览")
+                        category,
+                        items,
+                        relative_link(landing, overview, "返回项目概览"),
                     )
                     continue
                 items = (
@@ -447,7 +469,9 @@ class ProjectWorkspaceWriter:
                     + "".join(
                         "<li>"
                         + relative_link(
-                            landing, p, str(PurePosixPath(p).relative_to(root + "/" + category))
+                            landing,
+                            p,
+                            str(PurePosixPath(p).relative_to(root + "/" + category)),
                         )
                         + "</li>"
                         for p in children
@@ -472,7 +496,9 @@ class ProjectWorkspaceWriter:
             + "".join(project_links)
             + "</div><p>"
             + relative_link(
-                "00-开始阅读.html", "02-共享资料索引/index.html", "跨项目资料索引（辅助入口）"
+                "00-开始阅读.html",
+                "02-共享资料索引/index.html",
+                "跨项目资料索引（辅助入口）",
             )
             + "</p>",
         )
@@ -521,6 +547,19 @@ class ProjectWorkspaceWriter:
             )
             if not archive_path.resolve().is_relative_to(self.outputs):
                 raise PlatformError("INVALID_SPEC", "Archive target escapes configured outputs")
+            archive = native_path(archive_path)
+            archive.parent.mkdir(parents=True, exist_ok=True)
+            os.rename(native_path(old_view), archive)
+        for old_view in sorted(obsolete_material_views):
+            archive_path = (
+                self.outputs
+                / "reading-room"
+                / "superseded-material-views"
+                / uuid4().hex
+                / old_view.name
+            )
+            if not archive_path.resolve().is_relative_to(self.outputs):
+                raise PlatformError("INVALID_SPEC", "Material archive escapes configured outputs")
             archive = native_path(archive_path)
             archive.parent.mkdir(parents=True, exist_ok=True)
             os.rename(native_path(old_view), archive)

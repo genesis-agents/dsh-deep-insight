@@ -12,7 +12,6 @@ from urllib.parse import unquote, urlparse
 from uuid import uuid4
 
 from bs4 import BeautifulSoup
-
 from insight.adapters.export.project_workspace import ProjectWorkspaceWriter
 from insight.adapters.export.reading_html import (
     collection_table,
@@ -123,14 +122,22 @@ def component(value: str, limit: int = 28) -> str:
 
 
 def document_title(
-    source: dict[str, Any], document: ExtractedDocument, raw: bytes, media: str, role: str = ""
+    source: dict[str, Any],
+    document: ExtractedDocument,
+    raw: bytes,
+    media: str,
+    role: str = "",
 ) -> str:
     # Machine receipts and attachments describe acquisition, not the work's title.
     # Keep their bytes intact while giving the derived reading view a usable name.
     if role in ("source_metadata", "browser_capture", "transcript"):
         description = {
-            "source_metadata": "更新目录" if source["provider"] == "feed" else "采集记录",
-            "browser_capture": "浏览器画面" if media.startswith("image/") else "浏览器附件",
+            "source_metadata": "更新目录"
+            if source["provider"] == "feed"
+            else "采集记录",
+            "browser_capture": "浏览器画面"
+            if media.startswith("image/")
+            else "浏览器附件",
             "transcript": "演讲字幕",
         }[role]
         return f"{source['publisher']} · {description}"
@@ -143,10 +150,17 @@ def document_title(
     for unit in document.units:
         for line in unit.text.splitlines():
             if len(line.strip()) >= 8:
-                if re.search(r"capability needed|all rights reserved|copyright", line, re.I):
+                if re.search(
+                    r"capability needed|all rights reserved|copyright",
+                    line,
+                    re.IGNORECASE,
+                ):
                     return str(source["publisher"])
                 return line.strip()[:180]
-    return unquote(urlparse(source["resource_uri"]).path.rsplit("/", 1)[-1]) or source["source_id"]
+    return (
+        unquote(urlparse(source["resource_uri"]).path.rsplit("/", 1)[-1])
+        or source["source_id"]
+    )
 
 
 class ReadingRoomPublisher:
@@ -154,7 +168,9 @@ class ReadingRoomPublisher:
         self.root, self.blobs = output_root.resolve(), blobs
         self.project_workspace = ProjectWorkspaceWriter(workspace, output_root)
 
-    def publish(self, snapshot: dict[str, Any], artifacts: tuple[Artifact, ...]) -> dict[str, Any]:
+    def publish(
+        self, snapshot: dict[str, Any], artifacts: tuple[Artifact, ...]
+    ) -> dict[str, Any]:
         by_id = {a.artifact_id: a for a in artifacts}
         # Include renderer code, so a renderer change cannot reuse a prior edition silently.
         edition = fingerprint(
@@ -170,6 +186,7 @@ class ReadingRoomPublisher:
         base = "reading-room/editions/" + edition[:16]
         files: dict[str, bytes] = {}
         cards: dict[str, dict[str, Any]] = {}
+        materials: dict[str, dict[str, Any]] = {}
         for run in snapshot["runs"]:
             sources = {s["source_id"]: s for s in run["input"]["sources"]}
             for version in run["versions"]:
@@ -178,17 +195,51 @@ class ReadingRoomPublisher:
                 data = self.blobs.read(raw)
                 extracted_id = version["extracted_artifact_id"]
                 document = (
-                    ExtractedDocument.model_validate_json(self.blobs.read(by_id[extracted_id]))
+                    ExtractedDocument.model_validate_json(
+                        self.blobs.read(by_id[extracted_id])
+                    )
                     if extracted_id
                     else ExtractedDocument(processor_ref="none", units=())
                 )
                 title = document_title(source, document, data, raw.media_type, raw.role)
                 category = PROVIDERS[source["provider"]]
                 publisher = (
-                    component(source["publisher"], 20) + "--" + fingerprint(source["publisher"])[:8]
+                    component(source["publisher"], 20)
+                    + "--"
+                    + fingerprint(source["publisher"])[:8]
                 )
-                folder = f"资料库/{category}/{publisher}/{component(title)}--{fingerprint(version['version_id'])[:16]}"
+                identity = fingerprint(
+                    {
+                        "project": run["view"]["project_id"],
+                        "provider": source["provider"],
+                        "publisher": source["publisher"],
+                        "origin": version["origin_uri"],
+                        "role": raw.role,
+                        "sha256": raw.sha256,
+                        "document": document.model_dump(mode="json"),
+                    }
+                )
+                legacy_folder = f"资料库/{category}/{publisher}/{component(title)}--{fingerprint(version['version_id'])[:16]}"
+                folder = (
+                    f"资料库/{category}/{publisher}/{component(title)}--{identity[:16]}"
+                )
                 path = folder + "/index.html"
+                acquisition_path = (
+                    folder + "/acquisitions/" + version["version_id"] + ".json"
+                )
+                files[acquisition_path] = canonical(
+                    {
+                        "source": source,
+                        "version": version,
+                        "artifact": raw.model_dump(mode="json"),
+                    }
+                )
+                if identity in materials:
+                    card = materials[identity]
+                    card["legacy_folders"].append(legacy_folder)
+                    card["acquisitions"].append(acquisition_path)
+                    cards[version["version_id"]] = card
+                    continue
                 extension = {
                     "application/pdf": ".pdf",
                     "image/png": ".png",
@@ -209,15 +260,23 @@ class ReadingRoomPublisher:
                     raw_path = folder + "/原件-index.html"
                 record_path = folder + "/来源记录.json"
                 record = canonical(
-                    {"source": source, "version": version, "artifact": raw.model_dump(mode="json")}
+                    {
+                        "source": source,
+                        "version": version,
+                        "artifact": raw.model_dump(mode="json"),
+                    }
                 )
                 if record_path in files and files[record_path] != record:
-                    raise PlatformError("REVISION_CONFLICT", "Readable material path collision")
+                    raise PlatformError(
+                        "REVISION_CONFLICT", "Readable material path collision"
+                    )
                 files[raw_path] = data
                 text = "\n\n".join(
                     f"## 单元 {u.index}（{u.kind}）\n\n{u.text}" for u in document.units
                 )
-                files[folder + "/逐页或逐条文本.md"] = ("# " + title + "\n\n" + text).encode()
+                files[folder + "/逐页或逐条文本.md"] = (
+                    "# " + title + "\n\n" + text
+                ).encode()
                 card = dict(
                     title=title,
                     category=category,
@@ -227,7 +286,10 @@ class ReadingRoomPublisher:
                     project=run["view"]["project_id"],
                     source_id=source["source_id"],
                     version_id=version["version_id"],
+                    legacy_folders=[legacy_folder],
+                    acquisitions=[acquisition_path],
                 )
+                materials[identity] = card
                 cards[version["version_id"]] = card
                 body = table(
                     ["资料属性", "记录"],
@@ -262,7 +324,10 @@ class ReadingRoomPublisher:
                         ["采集时间", esc(version["acquired_at"])],
                         [
                             "发布时间",
-                            esc(version.get("published_at") or "未记录；不能以采集时间代替"),
+                            esc(
+                                version.get("published_at")
+                                or "未记录；不能以采集时间代替"
+                            ),
                         ],
                         ["来源位置", esc(version["origin_uri"])],
                         ["来源编号", esc(source["source_id"])],
@@ -277,14 +342,25 @@ class ReadingRoomPublisher:
                         ["关联研究项目", esc(card["project"])],
                     ],
                 )
-                body += "<h2>原始出处与取得依据</h2>" + listing(source["identity_basis"])
+                body += "<h2>原始出处与取得依据</h2>" + listing(
+                    source["identity_basis"]
+                )
                 body += paragraph(
                     "标题取自网页标题、文件名或提取首行，仅用于浏览；分类不证明内容真实或来源独立。",
                     "notice",
                 )
-                body += paragraph("提取文本不能替代原图、图表或演讲口述核对。", "notice")
-                body += "<p>" + relative_link(path, raw_path, "下载原始材料", download=True) + " · "
-                body += relative_link(path, folder + "/逐页或逐条文本.md", "完整提取文本") + "</p>"
+                body += paragraph(
+                    "提取文本不能替代原图、图表或演讲口述核对。", "notice"
+                )
+                body += (
+                    "<p>"
+                    + relative_link(path, raw_path, "下载原始材料", download=True)
+                    + " · "
+                )
+                body += (
+                    relative_link(path, folder + "/逐页或逐条文本.md", "完整提取文本")
+                    + "</p>"
+                )
                 if raw.media_type == "image/png":
                     body += (
                         '<img style="max-width:100%" src="'
@@ -295,7 +371,9 @@ class ReadingRoomPublisher:
                 body += "".join(
                     f'<section id="unit-{u.index}"><h2>单元 {u.index} · {esc(u.kind)}</h2>'
                     + (
-                        paragraph(f"视频时间 {u.start_seconds:.3f}–{u.end_seconds:.3f} 秒")
+                        paragraph(
+                            f"视频时间 {u.start_seconds:.3f}–{u.end_seconds:.3f} 秒"
+                        )
                         if u.start_seconds is not None and u.end_seconds is not None
                         else ""
                     )
@@ -303,8 +381,24 @@ class ReadingRoomPublisher:
                     + "</section>"
                     for u in document.units
                 )
-                files[path] = page(title, body, relative_link(path, "index.html", "返回阅读台"))
+                files[path] = page(
+                    title, body, relative_link(path, "index.html", "返回阅读台")
+                )
                 files[record_path] = record
+        for card in materials.values():
+            path = card["path"]
+            history = (
+                "<details><summary>采集历史 · "
+                + str(len(card["acquisitions"]))
+                + "</summary>"
+            )
+            history += "".join(
+                "<p>" + relative_link(path, capture, str(index + 1)) + "</p>"
+                for index, capture in enumerate(card["acquisitions"])
+            )
+            files[path] = files[path].replace(
+                b"</main>", (history + "</details></main>").encode()
+            )
         project_specs = {p["project_id"]: p for p in snapshot["projects"]}
         projects: dict[str, list[dict[str, Any]]] = {p: [] for p in project_specs}
         for run in snapshot["runs"]:
@@ -316,9 +410,13 @@ class ReadingRoomPublisher:
             spec = project_specs[project_id]
             body = paragraph(spec["question"])
             if not runs:
-                body += paragraph("任务已登记；尚未启动研究，没有已采集资料或成果。", "notice")
+                body += paragraph(
+                    "任务已登记；尚未启动研究，没有已采集资料或成果。", "notice"
+                )
                 task_path = f"研究项目/{project_id}/01-任务说明.html"
-                body += "<p>" + relative_link(path, task_path, "查看已登记任务") + "</p>"
+                body += (
+                    "<p>" + relative_link(path, task_path, "查看已登记任务") + "</p>"
+                )
                 files[task_path] = page(
                     "研究任务",
                     paragraph(spec["question"])
@@ -344,8 +442,10 @@ class ReadingRoomPublisher:
                     for r in runs
                 ],
             )
-            files[path] = page(project_id, body, relative_link(path, "index.html", "返回阅读台"))
-        files["index.html"] = self._home(projects, cards, project_specs)
+            files[path] = page(
+                project_id, body, relative_link(path, "index.html", "返回阅读台")
+            )
+        files["index.html"] = self._home(projects, materials, project_specs)
         files["阅读说明.md"] = (
             "# 阅读台\n\n从 index.html 进入。资料库按来源类别、发布机构、材料标题分类；"
             "每条资料同时标明材料类型和关联项目。研究项目按批次展示八个阶段。\n\n"
@@ -361,7 +461,7 @@ class ReadingRoomPublisher:
             "kind": "readable_workspace_projection",
             "edition": edition,
             "runs": len(snapshot["runs"]),
-            "materials": len(cards),
+            "materials": len(materials),
             "files": [
                 {"path": p, "sha256": hashlib.sha256(b).hexdigest(), "size": len(b)}
                 for p, b in sorted(files.items())
@@ -400,7 +500,9 @@ class ReadingRoomPublisher:
                 '<p><a href="'
                 + home
                 + '">进入资料分类与研究过程</a></p>'
-                + paragraph("此入口始终指向最近一次生成的阅读版本；研究变更后需刷新阅读台。")
+                + paragraph(
+                    "此入口始终指向最近一次生成的阅读版本；研究变更后需刷新阅读台。"
+                )
                 + f'<meta http-equiv="refresh" content="0;url={home}">',
             ),
         )
@@ -410,7 +512,7 @@ class ReadingRoomPublisher:
             "edition": edition,
             "projects": len(projects),
             "runs": len(snapshot["runs"]),
-            "materials": len(cards),
+            "materials": len(materials),
             "files_verified": len(files),
             "research_state_changed": False,
         }
@@ -421,8 +523,13 @@ class ReadingRoomPublisher:
             raise PlatformError("EVIDENCE_INVALID", "Reading edition manifest differs")
         for entry in expected["files"]:
             data = (directory / entry["path"]).read_bytes()
-            if len(data) != entry["size"] or hashlib.sha256(data).hexdigest() != entry["sha256"]:
-                raise PlatformError("EVIDENCE_INVALID", "Reading edition file failed verification")
+            if (
+                len(data) != entry["size"]
+                or hashlib.sha256(data).hexdigest() != entry["sha256"]
+            ):
+                raise PlatformError(
+                    "EVIDENCE_INVALID", "Reading edition file failed verification"
+                )
 
     def _home(
         self,
@@ -437,7 +544,9 @@ class ReadingRoomPublisher:
         for project_id, runs in projects.items():
             body += (
                 '<article class="card"><h3>'
-                + relative_link("index.html", f"研究项目/{project_id}/index.html", project_id)
+                + relative_link(
+                    "index.html", f"研究项目/{project_id}/index.html", project_id
+                )
                 + "</h3>"
             )
             body += (
@@ -475,7 +584,11 @@ class ReadingRoomPublisher:
                 )
                 + ">"
             )
-            body += "<td>" + relative_link("index.html", card["path"], card["title"]) + "</td>"
+            body += (
+                "<td>"
+                + relative_link("index.html", card["path"], card["title"])
+                + "</td>"
+            )
             body += (
                 "".join(
                     "<td>" + esc(card[k]) + "</td>"
@@ -537,7 +650,9 @@ search.addEventListener('input',filter);filters.forEach(f=>f.addEventListener('c
                         + esc(sources[i["source_ref"]]["resource_uri"])
                         + "<br>"
                         + esc(label(sources[i["source_ref"]]["identity_status"])),
-                        esc(label(i["goal"])) + " / " + ("必需" if i["required"] else "可选"),
+                        esc(label(i["goal"]))
+                        + " / "
+                        + ("必需" if i["required"] else "可选"),
                         esc(
                             (i["requested_window"]["start"] or "未指定起点")
                             + " → "
@@ -552,8 +667,12 @@ search.addEventListener('input',filter);filters.forEach(f=>f.addEventListener('c
         stages[-1] = collection_table(run.get("collection_coverage", {})) + stages[-1]
         acquisition = collection_table(run.get("collection_coverage", {}))
         for source_id, source in sources.items():
-            acquisition += "<h2>" + esc(source["publisher"]) + " · " + esc(source_id) + "</h2>"
-            observations = [o for o in run["observations"] if o["source_id"] == source_id]
+            acquisition += (
+                "<h2>" + esc(source["publisher"]) + " · " + esc(source_id) + "</h2>"
+            )
+            observations = [
+                o for o in run["observations"] if o["source_id"] == source_id
+            ]
             acquisition += (
                 table(
                     ["取得结果", "原因", "分页 / 覆盖"],
@@ -580,7 +699,9 @@ search.addEventListener('input',filter);filters.forEach(f=>f.addEventListener('c
                 + "".join(
                     "<li>"
                     + relative_link(
-                        path, cards[v["version_id"]]["path"], cards[v["version_id"]]["title"]
+                        path,
+                        cards[v["version_id"]]["path"],
+                        cards[v["version_id"]]["title"],
                     )
                     + " · "
                     + esc(v["acquired_at"])
@@ -591,13 +712,19 @@ search.addEventListener('input',filter);filters.forEach(f=>f.addEventListener('c
                 + "</ul>"
             )
         stages.append(acquisition)
-        excerpts = paragraph("引文定位到固定提取版本；文字匹配不代表图表和语义已经核对。", "notice")
+        excerpts = paragraph(
+            "引文定位到固定提取版本；文字匹配不代表图表和语义已经核对。", "notice"
+        )
         for item in evidence.values():
             card = cards[item["source_version_id"]]
             locator = item["locator"]
             path = root + "/" + STAGES[3] + ".html"
             excerpts += f'<section id="{esc(item["evidence_id"])}"><h2>{esc(card["title"])}</h2>'
-            excerpts += "<p>" + relative_link(path, card["path"], "查看原件与完整提取文本") + "</p>"
+            excerpts += (
+                "<p>"
+                + relative_link(path, card["path"], "查看原件与完整提取文本")
+                + "</p>"
+            )
             excerpts += paragraph(
                 (
                     f"原件第 {locator['unit_index']} 页；视觉观察（非原文引文）；观察者 {locator['observer']}；{locator['limitations']}"
@@ -611,7 +738,12 @@ search.addEventListener('input',filter);filters.forEach(f=>f.addEventListener('c
         stages.append(excerpts if evidence else paragraph("尚未选择证据。", "notice"))
         judgments = paragraph("尚未提交分析。", "notice")
         if analysis:
-            judgments = "<h2>" + esc(analysis["title"]) + "</h2>" + paragraph(analysis["synthesis"])
+            judgments = (
+                "<h2>"
+                + esc(analysis["title"])
+                + "</h2>"
+                + paragraph(analysis["synthesis"])
+            )
             judgments += "<h2>判断与依据</h2>"
             for claim in analysis["claims"]:
                 judgments += (
@@ -630,9 +762,15 @@ search.addEventListener('input',filter);filters.forEach(f=>f.addEventListener('c
                         root + "/" + STAGES[3] + ".html",
                         label(ref["relation"]) + "：" + ref["evidence_id"],
                     )
-                    link = link.replace('.html"', ".html#" + esc(ref["evidence_id"]) + '"')
+                    link = link.replace(
+                        '.html"', ".html#" + esc(ref["evidence_id"]) + '"'
+                    )
                     judgments += (
-                        "<p>" + link + "</p><blockquote>" + esc(item["quote"]) + "</blockquote>"
+                        "<p>"
+                        + link
+                        + "</p><blockquote>"
+                        + esc(item["quote"])
+                        + "</blockquote>"
                     )
                 judgments += "<b>反证或反向条件</b>" + listing(claim["counterevidence"])
             judgments += "<h2>限制与未解决项</h2>" + listing(analysis["limitations"])
@@ -705,7 +843,9 @@ search.addEventListener('input',filter);filters.forEach(f=>f.addEventListener('c
             [
                 [
                     esc(d["created_at"]),
-                    relative_link(path, d["relative_path"] + "/index.html", "研究报告与证据包"),
+                    relative_link(
+                        path, d["relative_path"] + "/index.html", "研究报告与证据包"
+                    ),
                     esc(label(d["quality_state"])),
                     "对应当前依据" if d["current_basis"] else "历史研究依据",
                 ]
@@ -716,7 +856,9 @@ search.addEventListener('input',filter);filters.forEach(f=>f.addEventListener('c
         for name, body in zip(STAGES, stages, strict=True):
             path = root + "/" + name + ".html"
             files[path] = page(
-                name, body, relative_link(path, root + "/index.html", "返回本轮研究过程")
+                name,
+                body,
+                relative_link(path, root + "/index.html", "返回本轮研究过程"),
             )
         path = root + "/index.html"
         body = paragraph(project["question"])
@@ -755,7 +897,10 @@ search.addEventListener('input',filter);filters.forEach(f=>f.addEventListener('c
         body += "<h2>真实执行时间线</h2>" + table(
             ["时间", "事件"],
             [
-                [esc(event.get("at", event.get("created_at", "未记录"))), esc(label(event["kind"]))]
+                [
+                    esc(event.get("at", event.get("created_at", "未记录"))),
+                    esc(label(event["kind"])),
+                ]
                 for event in run["events"]
             ],
         )
@@ -766,5 +911,7 @@ search.addEventListener('input',filter);filters.forEach(f=>f.addEventListener('c
         files[path] = page(
             "研究过程 · " + project["project_id"],
             body,
-            relative_link(path, f"研究项目/{project['project_id']}/index.html", "返回项目"),
+            relative_link(
+                path, f"研究项目/{project['project_id']}/index.html", "返回项目"
+            ),
         )

@@ -4,12 +4,24 @@ import { InsightError } from './engine.js'
 /** Bind execution to host search and model services without replaying author history. */
 export function researchExecution(ctx) {
   return {
+    async images(actor, inputs, signal) {
+      const attachments = ctx.get?.('attachments')
+      if (!attachments) throw new InsightError('REVIEW_IMAGES_UNAVAILABLE', '原图复核需要宿主附件服务；请启用附件服务后重试')
+      const model = await ctx.llm.resolveModelInfo(actor.provider, actor.model, signal)
+      if (model.inputModalities && !model.inputModalities.includes('image')) throw new InsightError('REVIEW_IMAGES_UNAVAILABLE', '当前复核模型不接收图片；请在当前会话选择支持图片的模型')
+      signal.throwIfAborted()
+      const refs = await attachments.saveImages(inputs)
+      signal.throwIfAborted()
+      return refs.map(attachment => ({type: 'image', attachment}))
+    },
     async search(queries, signal) {
       if (!ctx.web) throw new InsightError('SEARCH_UNAVAILABLE', '当前宿主未提供网络检索，请配置搜索服务后重试')
       const results=[]
       for(const query of queries){
         signal.throwIfAborted()
-        const result=await ctx.web.search({query},signal)
+        let result
+        try { result=await ctx.web.search({query},signal) }
+        catch (error) { error.partial_results = results; throw error }
         if (!Array.isArray(result?.sources) || typeof result.truncated !== 'boolean') throw new InsightError('SEARCH_INVALID', '检索返回格式无法核验')
         results.push({query,...result})
       }

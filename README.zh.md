@@ -26,7 +26,7 @@ kind: package-reference
 需要 Node 24.9 或更新版本、DeepSeek Harness 0.2.2-rc.1、uv 和 Python 3.13。通过 DSH 插件管理器安装已发布的 npm 包，也可使用 Releases 中的压缩包。
 
 ```sh
-dsh plugin --profile web add dsh-deep-insight@0.2.0-alpha.34
+dsh plugin --profile web add dsh-deep-insight@0.2.0-alpha.35
 dsh plugin --profile web exec node node_modules/dsh-deep-insight/scripts/setup-engine.mjs --profile web
 dsh --profile web
 ```
@@ -46,6 +46,10 @@ allowBuilds:
 ## 使用
 
 向 Agent 提出研究问题。deep_insight 工具的 guide 操作提供流程与输入格式。对话的“深度洞察”页呈现已保存的来源、证据、分析和交付检查。各对话使用独立研究工作区，配置中的内核可供同一配置下的对话共用。
+
+新项目修订通过 research_design 保存每个子问题的决策用途、替代解释、区分性证据和停止条件。coverage.assessment 保存有边界的回答、推理、已考虑的替代解释、剩余缺口和下一步调查。checkpoint 操作返回这些记录并安排未解决工作的优先级。必需的逐问题检索在采集前执行；认证失败需要修复已配置的搜索服务，重复执行相同计划不能恢复服务。
+
+隔离复核接收所有已采集正文，并通过宿主附件服务接收报告原图。原图复核需要支持图片的模型，PDF 原页另需 pdftoppm。负面意见可以引用章节遗漏的已保存证据；通过意见仍需章节已关联的依据。判断默认要求 corroborated 支持；attributed 仅用于来源归述，internal_check 仅用于检查原件内部一致性的观察。这些有限判断仍需语义复核，不能证明普遍效果。采集检查与报告就绪条件分别计算。
 
 节点详情独立滚动，关闭时折叠停靠侧栏。主标题 20px、小节标题 18px、正文与引文 16px、辅助信息 14px。执行历史有统一入口。报告通过句内角标链接证据，原始图表放在说明旁。可读研究目录包含任务、原始资料、证据、分析、成果、更新记录和概览。
 
@@ -72,6 +76,8 @@ YouTube 内嵌播放可能受平台策略或宿主配置限制，仍提供原视
 ## 开发
 
 在本包目录运行 npm test 和 npm run build:client。engine-manifest.json 的哈希覆盖附带的内核运行文件；修改内核时需要生成新的校验清单和可写运行目录。研究数据与凭据不得进入源码仓库或发布压缩包。
+
+经审阅的 Python 文件位于 engine-patch/files。编辑后运行 node scripts/update-engine-manifest.mjs；该命令校验现有附带文件，刷新补丁清单并准备新的运行目录标识。离线内核回归使用 npm run test:engine。旧载荷在序列化时省略缺失的研究字段，保留历史指纹。旧版读取器无法读取新写入的字段；请保留原运行目录，避免对含有新记录的工作区降级。
 
 ## 开发说明
 

@@ -53,49 +53,55 @@
     },
     {
       "path": "src/insight/application/research.py",
-      "sha256": "826d01ec68cb16cc207753b7d0cf3fee1e7b4202c46480f3c50ff349737cf615",
+      "sha256": "e7ad02ad3590bb62466de29717d222e2ee735ff7d99d676c436f1da67219a137",
       "baseSha256": "3fc520ee625dd75d3b5d7ec51aa2b64fa9e9c06f7c386e607141339d0da57fdf",
       "previousSha256": [
         "ebc549853ab7892fe62190a46ebdef12047ecac19f48649403b2e74867ac7ea8",
         "16fd4d1f921da283d69cb5eebc1954e63f7c9fec30c3d20198d9ad269ccc6776",
         "7d5f16f8d88c9898a4244a7afe928345e977d790e1a9b8db234bee4c8bfd013e",
-        "c374e142128d0bdda0b06a13838280d8c5d1be51a9956e7fe7588aa1e2a98cf6"
+        "c374e142128d0bdda0b06a13838280d8c5d1be51a9956e7fe7588aa1e2a98cf6",
+        "826d01ec68cb16cc207753b7d0cf3fee1e7b4202c46480f3c50ff349737cf615"
       ]
     },
     {
       "path": "src/insight/domain/assessment.py",
-      "sha256": "d2182d52c30f29ec32838ae9346ea99e8bc0c656ae920cb7e2915c270f68b7d7",
+      "sha256": "76d849f0fb137e318d97a5f76550e4a93023f89e341654316d4d80f927451ebf",
       "baseSha256": null,
       "previousSha256": [
         "b9cef8e5377064c4dc11665b64988529cc36c7d3b5c1e2a05a1fe0d2d5cda09f",
         "7453446550bd0ec33836b1c9d8bc9458494fd4268f12e042f8744465c21eaa9c",
-        "32a243b4797e8295bf8e97926b14448ba789a7a7a4cd8dff174963ecd62449b2"
+        "32a243b4797e8295bf8e97926b14448ba789a7a7a4cd8dff174963ecd62449b2",
+        "d2182d52c30f29ec32838ae9346ea99e8bc0c656ae920cb7e2915c270f68b7d7"
       ]
     },
     {
       "path": "src/insight/domain/contracts.py",
-      "sha256": "26a94e768fc2c0ba058dc0f04b6cc550597445bbe9e2af0cdabd736c8f55fca1",
+      "sha256": "7f097f2175364e04d8d9efde8d0fefa2bf27d30d5e65063932b35eae3e0abc1c",
       "baseSha256": "bcb15a1acd68b495848257ce2e39f748a6b81956fd0ccc70ac8714c1f7109aed",
       "previousSha256": [
-        "bfd605d16d4ace7bc9cc7a003e4e127353ddc0cf3acfc2062659a81ef0ccff31"
+        "bfd605d16d4ace7bc9cc7a003e4e127353ddc0cf3acfc2062659a81ef0ccff31",
+        "26a94e768fc2c0ba058dc0f04b6cc550597445bbe9e2af0cdabd736c8f55fca1"
       ]
     },
     {
       "path": "src/insight/domain/report_quality.py",
-      "sha256": "9bccf14ab25ac42a8aaebbbecfa1fe429cbbd3b8da6d0a21f2ea5144003d2388",
+      "sha256": "84e00ce2dff23423890824404b031bc373f2f34d68d72c3d62a89cb1159282a5",
       "baseSha256": null,
       "previousSha256": [
         "4fc273175a7a52e4de6502ab1ab1d34f4a85d7f9261a8c1a71845dd1dfa6e0e8",
         "8e05c993e11ab5708f2f4d51023da1354214e6630b9d6a7cf81e582b8b5ac350",
-        "a5819083a72d421a386fd7b130e22deec5fa94d99567416e430f8a584ea6435f"
+        "a5819083a72d421a386fd7b130e22deec5fa94d99567416e430f8a584ea6435f",
+        "9bccf14ab25ac42a8aaebbbecfa1fe429cbbd3b8da6d0a21f2ea5144003d2388",
+        "7d7070f9b55005395d001f5e1752fa6bf00e99e88e77c162368153304c7c6f6b"
       ]
     },
     {
       "path": "src/insight/entrypoints/cli.py",
-      "sha256": "7e9f48a27534a276edeb80e8d91b58342de06abe27a66e3dd309772fdb6fb125",
+      "sha256": "12070556b6d9f187407b2036a15495d4a41120f5db82072db3bb9e07cf6627e0",
       "baseSha256": "bac3cc89406e70881fa587b4150dd11883faa029d73a7fd3613005820d8d3048",
       "previousSha256": [
-        "b09ed242c8fe08cd6483b47f46fd05338cf4f621691bc41a576aec4f334541ee"
+        "b09ed242c8fe08cd6483b47f46fd05338cf4f621691bc41a576aec4f334541ee",
+        "7e9f48a27534a276edeb80e8d91b58342de06abe27a66e3dd309772fdb6fb125"
       ]
     },
     {
@@ -109,10 +115,11 @@
     },
     {
       "path": "tests/e2e/test_reading_room.py",
-      "sha256": "924c2eb36e4039fb2477bb2ccf65a47590ce8df7e58944233d1c94e94f1d8ad2",
+      "sha256": "eb5c3bddf09ab7ea040c873c8c645603d3b7e2600204d886f87d42fd6d2f3876",
       "baseSha256": "2035f3dffb896338d1e13f60061806b74701bfad443dfac121a10345f25e6fef",
       "previousSha256": [
-        "c7be080c5257d3d286efd9db07e02aa6fd7a1b1aa3c847a35701ff15e03a9484"
+        "c7be080c5257d3d286efd9db07e02aa6fd7a1b1aa3c847a35701ff15e03a9484",
+        "924c2eb36e4039fb2477bb2ccf65a47590ce8df7e58944233d1c94e94f1d8ad2"
       ]
     },
     {
@@ -144,8 +151,11 @@
     },
     {
       "path": "tests/helpers.py",
-      "sha256": "15c24a1fd1935d6965ab8cfaf2760f959de3a26a8314c4f2dcdb123c47b5530f",
-      "baseSha256": "77d61512972de7369e3c5edf7b54366b58b21bb8f70c8fb9f7c17367a3bce6e4"
+      "sha256": "f67a74d0d943bbc7f81ecc40e1b821b8903c9c84d7a398a97925ac4810c27ab7",
+      "baseSha256": "77d61512972de7369e3c5edf7b54366b58b21bb8f70c8fb9f7c17367a3bce6e4",
+      "previousSha256": [
+        "15c24a1fd1935d6965ab8cfaf2760f959de3a26a8314c4f2dcdb123c47b5530f"
+      ]
     },
     {
       "path": "tests/integration/test_execution_and_parsers.py",
@@ -218,6 +228,39 @@
       "previousSha256": [
         "a1eb0399c0ef7847cf4d98b24602600064c235dec03190e20c0179cfe16cf181"
       ]
+    },
+    {
+      "path": "tests/conftest.py",
+      "sha256": "a37da04eaa3c847ccee6d5d2dba9aedf2b5fff368dc241f66ee2d6fd562e3c27",
+      "baseSha256": null
+    },
+    {
+      "path": "tests/__init__.py",
+      "sha256": "4c4eabdd9e909936a833d6469de4d561423043a8e00ec7a6648466fad5659b9a",
+      "baseSha256": null
+    },
+    {
+      "path": "tests/e2e/test_question_research.py",
+      "sha256": "a9e4ea361a4f14fd0ebab6c9f24ed5e1256fffc7d7e7e07a4997a8de97fa729c",
+      "baseSha256": null,
+      "previousSha256": [
+        "ee64405f3a96090efde1d9d41d4819196395fd9b8cbe95d9374c5b4433030b1d"
+      ]
+    },
+    {
+      "path": "src/insight/application/workflow.py",
+      "sha256": "af78b08678ffafe4700e60e95dbc3f345fdc6eddf15626bf91a60a5c5edc5916",
+      "baseSha256": "f40b9e677b873aaac1c2ef3304fd95dcace1f55d5e50c5ddc607560257f74a08"
+    },
+    {
+      "path": "src/insight/adapters/persistence/database.py",
+      "sha256": "6246e86c53c306cbdfe810c14874d89735338aec6ed7dba941ba28a6e6f7b273",
+      "baseSha256": "baa28a8e5239f938807db8264ca64679654494b44cd76aaf45cd4096ed7460f3"
+    },
+    {
+      "path": "src/insight/ports/storage.py",
+      "sha256": "e001e85ff2271f1d0e6258cda039416a5cd5ecbaa8f5c87168da3bc239be60af",
+      "baseSha256": "b3208d67fd55ecf7a7cbc16b9fce4339bcfc2cd87ab56f83506021f8a9699cc9"
     }
   ]
 }

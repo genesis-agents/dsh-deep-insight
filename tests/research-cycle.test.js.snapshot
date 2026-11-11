@@ -1,0 +1,53 @@
+exports[`checkpoint prioritizes unavailable discovery over polishing an unsupported report 1`] = `
+{
+  "run_id": "case",
+  "quality_state": "draft",
+  "questions": [
+    {
+      "subquestion": "How did the advantage form?",
+      "design": {
+        "subquestion": "How did the advantage form?",
+        "alternatives": [
+          "selection",
+          "platform effect"
+        ],
+        "evidence_needed": [
+          "matched outcomes"
+        ],
+        "stop_condition": "A bounded mechanism can be distinguished"
+      },
+      "evidence_ids": [],
+      "assessment": null,
+      "unresolved": null
+    }
+  ],
+  "blockers": [
+    {
+      "gate_id": "report_review",
+      "detail": "Explain the mechanism"
+    },
+    {
+      "gate_id": "search_record",
+      "detail": "Acquire question-specific discovery"
+    }
+  ],
+  "next": {
+    "action": "repair_search_service",
+    "reason": "Acquire question-specific discovery"
+  },
+  "review_findings": null,
+  "search_failure": {
+    "code": "AUTH_FAILED",
+    "error": "Configure the research search credential"
+  },
+  "revision_rule": "Keep scope and quality requirements fixed. Revise the source plan when evidence is missing; revise the project only when the research question or agreed scope changes."
+}
+`;
+
+exports[`checkpoint prioritizes unavailable discovery over polishing an unsupported report 2`] = `
+{
+  "design": "Before collecting, save research_design with one entry per exact subquestion: subquestion, decision_relevance, alternatives (plausible explanations or comparison options), evidence_needed (observations that distinguish them), stop_condition (what permits a bounded answer). Select the next acquisition by its effect on the answer, not by channel quotas or source counts. After evidence selection save coverage.assessment with answer, reasoning, alternatives_considered, remaining_gaps and next_action. A bounded answer may retain uncertainty; unresolved means the question cannot yet be answered. Use checkpoint to inspect saved assessments, blockers and the next operation. Missing evidence calls for new collection or a narrower explicitly agreed scope, not extra paragraphs.",
+  "support": "Claim support_basis defaults to corroborated and requires the project independent-source threshold. Use attributed only for a source_claim faithfully reporting what an identified original says, never for asserting its real-world truth. Use internal_check only for an observation checking arithmetic or consistency within exact originals; show the calculation or contradiction. Both still require semantic review. Causal, comparative, effectiveness and economic generalizations remain corroborated. A source count never establishes causality.",
+  "revision": "Treat review revisions as research tasks: missing facts require evidence collection; invalid comparisons require a common basis; unsupported explanations require alternatives and discriminating observations. After repairs, rewrite the affected argument and executive synthesis as a whole. Remove superseded caveats and repetitive qualifications. Do not satisfy review by appending disconnected paragraphs. Keep a clear best-supported answer, its implications and the decisive uncertainty."
+}
+`;

@@ -46,7 +46,7 @@ export function researchStages(detail) {
   return [
     stage('stageAcquire', detail.source_versions?.length, ['collection_coverage', 'source_coverage', 'temporal_coverage', 'search_record']),
     stage('stageEvidence', detail.evidence?.length, ['question_coverage', 'exact_citations']),
-    stage('stageAnalysis', detail.analysis, ['report_composition', 'independent_support']),
+    stage('stageAnalysis', detail.analysis, ['report_composition', 'independent_support', ...(detail.input_snapshot?.project?.research_design ? ['question_analysis'] : [])]),
     stage('stageReview', detail.verification?.checks?.length || detail.verification_status === 'stale', ['semantic_verification', 'isolated_review', 'report_review'], detail.verification_status ?? 'missing'),
   ]
 }

@@ -10,6 +10,7 @@ from insight.domain.contracts import (
     ContextSnapshot,
     FrozenInput,
     GateResult,
+    ReportFigure,
     SourceVersion,
     VerificationSubmission,
 )
@@ -77,6 +78,19 @@ def assess_research(
         if missing
         else "Every declared question has evidence and no recorded unresolved gap.",
     )
+    if frozen.project.research_design is not None:
+        unfinished = [
+            item.subquestion for item in coverage
+            if item.assessment is None
+        ]
+        check(
+            "question_analysis",
+            bool(coverage) and not unfinished and not missing,
+            "Develop bounded answers, reasoning, alternatives and next investigations for: "
+            + "; ".join(unfinished or missing)
+            if unfinished or missing or not coverage
+            else "Every question has an evidence-linked assessment; semantic adequacy requires isolated review.",
+        )
     evidence = {e.evidence_id: e for e in context.evidence} if context else {}
     version_map = {v.version_id: v for v in versions}
     source_map = {s.source_id: s for s in frozen.sources}
@@ -108,6 +122,10 @@ def assess_research(
     )
     weak = []
     for claim in analysis.claims if analysis else ():
+        required_groups = (
+            1 if claim.support_basis in ("attributed", "internal_check")
+            else standard.min_supporting_groups
+        )
         groups = set()
         raw_objects = set()
         for link in claim.evidence_links:
@@ -121,9 +139,9 @@ def assess_research(
             raw_objects.add(version.raw_artifact_id)
             if source.independence_group:
                 groups.add(source.independence_group.casefold().strip())
-            elif standard.min_supporting_groups == 1:
+            elif required_groups == 1:
                 groups.add(source.canonical_identity)
-        if len(groups) < standard.min_supporting_groups:
+        if len(groups) < required_groups:
             weak.append(claim.claim_id)
     check(
         "independent_support",
@@ -138,8 +156,16 @@ def assess_research(
     searched = {
         q
         for event in searches
-        if event.get("sources") and event.get("truncated") is False
+        if frozen.project.research_design is not None
+        or (event.get("sources") and event.get("truncated") is False)
         for q in event.get("questions", [])
+        if frozen.project.research_design is None
+        or any(
+            result.get("question") == q
+            and result.get("sources")
+            and result.get("truncated") is False
+            for result in event.get("results", [])
+        )
     }
     check(
         "search_record",
@@ -149,6 +175,9 @@ def assess_research(
         if standard.require_search_record
         else "Search record explicitly waived: " + standard.rationale,
     )
+    visual_evidence = bool(context and any(
+        getattr(item.locator, "modality", None) == "visual_page" for item in context.evidence
+    ))
     isolated = bool(
         analysis
         and verification
@@ -160,6 +189,7 @@ def assess_research(
             == fingerprint(analysis)
             and e.get("payload", {}).get("checks")
             == [c.model_dump(mode="json") for c in verification.checks]
+            and (not visual_evidence or e.get("payload", {}).get("visual_scope", {}).get("available") is True)
             for e in events
         )
     )
@@ -192,6 +222,12 @@ def assess_research(
     )
     report_checks = matching_review.get("report_checks", [])
     chapter_gaps = section_review_gaps(analysis, matching_review)
+    if (
+        analysis and analysis.narrative
+        and any(isinstance(block, ReportFigure) for section in analysis.narrative.sections for block in section.blocks)
+        and matching_review.get("visual_scope", {}).get("available") is not True
+    ):
+        chapter_gaps.append("Review original figure pixels through an image-capable model; text extraction is insufficient.")
     criteria = {
         "question_coverage",
         "analytical_depth",

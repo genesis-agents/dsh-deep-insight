@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "8a9e5383c986727d",
+  "id": "a7e818d7803120cb",
   "engineVersion": "0.1.5",
   "sourceRevision": "6f01c9fb4aeab0cbee25438afb29c1b623a18636",
   "files": [
@@ -49,24 +49,16 @@
       "sha256": "d583225b03da2cef7a993d25eb33501780ad49ea1bd18ca6c8f14e8103880fff"
     },
     {
-      "path": "src/insight/adapters/export/reading_html.py",
-      "sha256": "941623c09ec1bb0f9ef1c65c1b09f70cde328ae34b6562f6b2840e2f9e6abce3"
-    },
-    {
       "path": "src/insight/adapters/export/reading.py",
       "sha256": "9c8b1324568330783aedaa3d320547ecf4e60a81aaf4e9c8d0dedd8b64b57a55"
     },
     {
+      "path": "src/insight/adapters/export/reading_html.py",
+      "sha256": "941623c09ec1bb0f9ef1c65c1b09f70cde328ae34b6562f6b2840e2f9e6abce3"
+    },
+    {
       "path": "src/insight/adapters/export/templates/project.html",
       "sha256": "f94a59c6857f64ff279f3a31df342c1210479f7977703d47abe1155f5f0f7efa"
-    },
-    {
-      "path": "src/insight/adapters/export/templates/report_blocks.html",
-      "sha256": "5f31a282fe962911c3b57bd5236e6ca71e9ea035e3db366a6da4ea327f0de033"
-    },
-    {
-      "path": "src/insight/adapters/export/templates/report_inline_blocks.html",
-      "sha256": "1a21e30309f18d80d1b86c16faab676a64f31f5cf84529007bdd7b151c12fefb"
     },
     {
       "path": "src/insight/adapters/export/templates/report.css",
@@ -75,6 +67,14 @@
     {
       "path": "src/insight/adapters/export/templates/report.html",
       "sha256": "6b87007ba4efc1cefb40f92ea42664de47434e1408ba6914b1638bc3e291f37b"
+    },
+    {
+      "path": "src/insight/adapters/export/templates/report_blocks.html",
+      "sha256": "5f31a282fe962911c3b57bd5236e6ca71e9ea035e3db366a6da4ea327f0de033"
+    },
+    {
+      "path": "src/insight/adapters/export/templates/report_inline_blocks.html",
+      "sha256": "1a21e30309f18d80d1b86c16faab676a64f31f5cf84529007bdd7b151c12fefb"
     },
     {
       "path": "src/insight/adapters/export/templates/workspace.html",
@@ -86,7 +86,7 @@
     },
     {
       "path": "src/insight/adapters/persistence/database.py",
-      "sha256": "baa28a8e5239f938807db8264ca64679654494b44cd76aaf45cd4096ed7460f3"
+      "sha256": "6246e86c53c306cbdfe810c14874d89735338aec6ed7dba941ba28a6e6f7b273"
     },
     {
       "path": "src/insight/adapters/persistence/objects.py",
@@ -206,7 +206,7 @@
     },
     {
       "path": "src/insight/application/research.py",
-      "sha256": "826d01ec68cb16cc207753b7d0cf3fee1e7b4202c46480f3c50ff349737cf615"
+      "sha256": "e7ad02ad3590bb62466de29717d222e2ee735ff7d99d676c436f1da67219a137"
     },
     {
       "path": "src/insight/application/source_images.py",
@@ -214,7 +214,7 @@
     },
     {
       "path": "src/insight/application/workflow.py",
-      "sha256": "f40b9e677b873aaac1c2ef3304fd95dcace1f55d5e50c5ddc607560257f74a08"
+      "sha256": "af78b08678ffafe4700e60e95dbc3f345fdc6eddf15626bf91a60a5c5edc5916"
     },
     {
       "path": "src/insight/bootstrap.py",
@@ -226,7 +226,7 @@
     },
     {
       "path": "src/insight/domain/assessment.py",
-      "sha256": "d2182d52c30f29ec32838ae9346ea99e8bc0c656ae920cb7e2915c270f68b7d7"
+      "sha256": "76d849f0fb137e318d97a5f76550e4a93023f89e341654316d4d80f927451ebf"
     },
     {
       "path": "src/insight/domain/captures.py",
@@ -238,7 +238,7 @@
     },
     {
       "path": "src/insight/domain/contracts.py",
-      "sha256": "26a94e768fc2c0ba058dc0f04b6cc550597445bbe9e2af0cdabd736c8f55fca1"
+      "sha256": "7f097f2175364e04d8d9efde8d0fefa2bf27d30d5e65063932b35eae3e0abc1c"
     },
     {
       "path": "src/insight/domain/publications.py",
@@ -246,7 +246,7 @@
     },
     {
       "path": "src/insight/domain/report_quality.py",
-      "sha256": "9bccf14ab25ac42a8aaebbbecfa1fe429cbbd3b8da6d0a21f2ea5144003d2388"
+      "sha256": "84e00ce2dff23423890824404b031bc373f2f34d68d72c3d62a89cb1159282a5"
     },
     {
       "path": "src/insight/domain/rules.py",
@@ -258,7 +258,7 @@
     },
     {
       "path": "src/insight/entrypoints/cli.py",
-      "sha256": "7e9f48a27534a276edeb80e8d91b58342de06abe27a66e3dd309772fdb6fb125"
+      "sha256": "12070556b6d9f187407b2036a15495d4a41120f5db82072db3bb9e07cf6627e0"
     },
     {
       "path": "src/insight/ports/__init__.py",
@@ -278,7 +278,7 @@
     },
     {
       "path": "src/insight/ports/storage.py",
-      "sha256": "b3208d67fd55ecf7a7cbc16b9fce4339bcfc2cd87ab56f83506021f8a9699cc9"
+      "sha256": "e001e85ff2271f1d0e6258cda039416a5cd5ecbaa8f5c87168da3bc239be60af"
     },
     {
       "path": "src/insight/resources/profiles/company.json",
@@ -298,7 +298,7 @@
     }
   ],
   "artifact": {
-    "url": "https://github.com/genesis-agents/dsh-deep-insight/releases/download/v0.2.0-alpha.34/deep-insight-engine-alpha34.tgz",
-    "integrity": "sha512-OBuLlwrBBI9AXcsrie6Mk+D3XbkN8fLHImHrpl0vmxexDMjNv8V8A89xN5j52IgJ/rlODoOr4LB0f+g3peCJlA=="
+    "url": "https://github.com/genesis-agents/dsh-deep-insight/releases/download/v0.2.0-alpha.35/deep-insight-engine-alpha35.tgz",
+    "integrity": "sha512-a7d9ONmfwm5VPlmK8VJI6onb02oFmq45H/uGGes3X5bJ6KQEbArmU929mZKokWLDseWJm8aqvuRTYr6Cr7vKCg=="
   }
 }

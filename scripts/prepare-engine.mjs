@@ -14,6 +14,9 @@ import {runtimeManifest} from '../src/runtime-paths.js'
  */
 export async function prepareBundledEngine(destination=fileURLToPath(new URL('../engine/',import.meta.url))){
  const manifest=await runtimeManifest(),missing=[]
+ const patchRoot=new URL('../engine-patch/',import.meta.url)
+ const patch=JSON.parse(await readFile(new URL('manifest.json',patchRoot),'utf8'))
+ const patched=new Map(patch.files.map(file=>[file.path,file]))
  const digest=bytes=>createHash('sha256').update(bytes).digest('hex')
  for(const file of manifest.files){
   try{if(digest(await readFile(join(destination,file.path)))!==file.sha256)throw Error('Engine file has local changes: '+file.path)}
@@ -33,6 +36,14 @@ export async function prepareBundledEngine(destination=fileURLToPath(new URL('..
   await writeFile(archivePath,archive,{flag:'wx'})
   await x({file:archivePath,cwd:extracted,strip:2,filter:path=>path==='package'||path==='package/engine'||path.startsWith('package/engine/')})
   for(const file of missing){
+   const overlay=patched.get(file.path)
+   if(overlay){
+    const bytes=await readFile(new URL('files/'+file.path,patchRoot))
+    if(digest(bytes)!==overlay.sha256||overlay.sha256!==file.sha256)throw Error('Engine patch integrity mismatch: '+file.path)
+    const target=join(extracted,file.path)
+    await mkdir(dirname(target),{recursive:true})
+    await writeFile(target,bytes)
+   }
    const source=join(extracted,file.path)
    if(digest(await readFile(source))!==file.sha256)throw Error('Engine artifact file integrity mismatch: '+file.path)
   }

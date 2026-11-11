@@ -1,6 +1,7 @@
 /** Locale-owned research UI copy; research content retains its source language. */
 import React from 'react'
 export const en = {
+  question_analysis:'Question analysis',question_analysis_help:'Develop bounded answers, reasoning, alternatives and the next evidence needed for each research question.',
   citationExpand:'Show full quotation',citationCollapse:'Collapse quotation',
   graphLabels:'Relation labels',
   graphInspector:'Knowledge details',graphNodeKind:'Node',graphEdgeKind:'Relation',graphInspectHeading:'Follow the evidence',graphInspectHelp:'Select a node to explore its connections, or select a relation to read the exact supporting evidence.',graphConnected:'Connected',graphIndependent:'Independent',graphSizeHelp:'Node size reflects connection count',
@@ -263,6 +264,7 @@ export const en = {
 }
 /** @satisfies {Record<keyof typeof en, string>} */
 export const zh = {
+  question_analysis:'问题分析',question_analysis_help:'为每个研究问题补充有边界的回答、推理、替代解释与下一步所需证据。',
   citationExpand:'展开完整引文',citationCollapse:'收起引文',
   graphLabels:'关系文字',
   graphInspector:'知识详情',graphNodeKind:'知识节点',graphEdgeKind:'知识关系',graphInspectHeading:'从关联追溯证据',graphInspectHelp:'选择节点探索关联，或选择连线查看支撑这条关系的原文证据',graphConnected:'关联节点',graphIndependent:'独立节点',graphSizeHelp:'节点大小表示关联数量',

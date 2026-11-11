@@ -135,6 +135,16 @@ class ResearchStandard(Contract):
     rationale: Nonempty
 
 
+class QuestionDesign(Contract):
+    """A decision-relevant question and the observations needed to distinguish alternatives."""
+
+    subquestion: Nonempty
+    decision_relevance: Nonempty
+    alternatives: Annotated[tuple[Nonempty, ...], Field(min_length=1)]
+    evidence_needed: Annotated[tuple[Nonempty, ...], Field(min_length=1)]
+    stop_condition: Nonempty
+
+
 class ProjectSpec(Contract):
     project_id: Id
     question: Nonempty
@@ -142,6 +152,9 @@ class ProjectSpec(Contract):
     scope: Scope
     profile_ref: Annotated[str, Field(pattern=r"^[A-Za-z0-9_.-]+@[1-9][0-9]*$")]
     subquestions: Annotated[tuple[Nonempty, ...], Field(min_length=1)]
+    research_design: tuple[QuestionDesign, ...] | None = Field(
+        default=None, exclude_if=lambda v: v is None
+    )
     quality_standard: ResearchStandard | None = Field(default=None, exclude_if=lambda v: v is None)
     collection_requirements: tuple[ChannelRequirement, ...] | None = Field(
         default=None, exclude_if=lambda v: v is None
@@ -149,6 +162,10 @@ class ProjectSpec(Contract):
 
     @model_validator(mode="after")
     def unique_channels(self) -> ProjectSpec:
+        if self.research_design is not None:
+            questions = [item.subquestion for item in self.research_design]
+            if len(set(questions)) != len(questions) or len(questions) != len(self.subquestions) or set(questions) != set(self.subquestions):
+                raise ValueError("Research design must cover every subquestion exactly once")
         if self.collection_requirements is not None:
             channels = [r.channel for r in self.collection_requirements]
             if not channels or len(channels) != len(set(channels)):
@@ -420,10 +437,21 @@ class EvidenceSpan(EvidenceInput):
     end_seconds: float | None = Field(default=None, exclude_if=lambda v: v is None)
 
 
+class QuestionAssessment(Contract):
+    """A bounded answer, its reasoning and the most useful remaining investigation."""
+
+    answer: Nonempty
+    reasoning: Nonempty
+    alternatives_considered: Annotated[tuple[Nonempty, ...], Field(min_length=1)]
+    remaining_gaps: tuple[Nonempty, ...]
+    next_action: Nonempty
+
+
 class CoverageItem(Contract):
     subquestion: Nonempty
     evidence_ids: tuple[Id, ...]
     unresolved: str | None = None
+    assessment: QuestionAssessment | None = Field(default=None, exclude_if=lambda v: v is None)
 
     @model_validator(mode="after")
     def coverage_or_gap(self) -> CoverageItem:
@@ -445,6 +473,9 @@ class EvidenceLink(Contract):
 class Claim(Contract):
     claim_id: Id
     kind: Literal["source_claim", "observation", "inference", "hypothesis"]
+    support_basis: Literal["corroborated", "attributed", "internal_check"] = Field(
+        default="corroborated", exclude_if=lambda v: v == "corroborated"
+    )
     statement: Nonempty
     conditions: Annotated[tuple[Nonempty, ...], Field(min_length=1)]
     evidence_links: Annotated[tuple[EvidenceLink, ...], Field(min_length=1)]
@@ -452,6 +483,14 @@ class Claim(Contract):
     category: Literal["technical", "provenance"] | None = Field(
         default=None, exclude_if=lambda v: v is None
     )
+
+    @model_validator(mode="after")
+    def support_kind(self) -> Claim:
+        if self.support_basis == "attributed" and self.kind != "source_claim":
+            raise ValueError("Attributed support applies only to source claims")
+        if self.support_basis == "internal_check" and self.kind != "observation":
+            raise ValueError("Internal checks apply only to observations within cited originals")
+        return self
 
 
 class Attribution(Contract):

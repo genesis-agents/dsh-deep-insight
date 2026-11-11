@@ -11,11 +11,6 @@ from typing import Any, TypeVar
 
 from alembic import command
 from alembic.config import Config
-from sqlalchemy import Connection, Table, and_, create_engine, event, func, select
-from sqlalchemy.dialects.sqlite import insert
-from sqlalchemy.engine import URL
-from sqlalchemy.exc import DatabaseError, IntegrityError
-
 from insight.adapters.persistence import schema_v1 as t
 from insight.adapters.persistence.objects import native_path
 from insight.adapters.persistence.schema_v2 import publications
@@ -44,6 +39,10 @@ from insight.domain.contracts import (
 from insight.domain.publications import PublicationRecord
 from insight.domain.rules import canonical, fingerprint
 from insight.ports.storage import Repository
+from sqlalchemy import Connection, Table, and_, create_engine, event, func, select
+from sqlalchemy.dialects.sqlite import insert
+from sqlalchemy.engine import URL
+from sqlalchemy.exc import DatabaseError, IntegrityError
 
 T = TypeVar("T", bound=Contract)
 
@@ -509,12 +508,13 @@ class Database:
         if result.rowcount != 1:
             raise PlatformError("LEASE_LOST", "Expired, cancelled or superseded worker lease")
 
-    def claim(self, owner: str, now: str, lease_until: str) -> Lease | None:
+    def claim(self, owner: str, now: str, lease_until: str, run_id: str | None = None) -> Lease | None:
         with self.engine.begin() as c:
             self._check_revision(c)
-            row = c.execute(
-                select(t.jobs).where(t.jobs.c.state == "queued").order_by(t.jobs.c.job_id).limit(1)
-            ).first()
+            query = select(t.jobs).where(t.jobs.c.state == "queued")
+            if run_id is not None:
+                query = query.where(t.jobs.c.run_id == run_id)
+            row = c.execute(query.order_by(t.jobs.c.job_id).limit(1)).first()
             if row is None:
                 return None
             result = c.execute(

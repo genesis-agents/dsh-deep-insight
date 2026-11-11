@@ -26,7 +26,7 @@ Deep insight adds a research workflow to the current DeepSeek Harness conversati
 Requires Node 24.9 or newer, DeepSeek Harness 0.2.2-rc.1, uv and Python 3.13. Install the published npm package through the supported DSH plugin manager. Release archives are also available.
 
 ```sh
-dsh plugin --profile web add dsh-deep-insight@0.2.0-alpha.34
+dsh plugin --profile web add dsh-deep-insight@0.2.0-alpha.35
 dsh plugin --profile web exec node node_modules/dsh-deep-insight/scripts/setup-engine.mjs --profile web
 dsh --profile web
 ```
@@ -46,6 +46,10 @@ allowBuilds:
 ## Use
 
 Ask the agent to research a question. The deep_insight tool's guide action describes the workflow and input schemas. The conversation's Deep insight tab shows saved sources, evidence, analysis and delivery checks. Each conversation has a separate research workspace; the profile's configured engine can be shared.
+
+New project revisions declare research_design for each subquestion: its decision relevance, alternatives, distinguishing evidence and stopping condition. Saved coverage.assessment records the bounded answer, reasoning, alternatives considered, remaining gaps and next investigation. The checkpoint action returns these records and prioritizes unresolved work. Required question-linked searches run before acquisition; authentication failures require repairing the configured search service, rather than retrying unchanged plans.
+
+Isolated review receives all acquired text originals and admits report figures through the host attachment service. Original-figure review requires an image-capable model and, for PDF pages, pdftoppm. Negative findings can cite saved evidence omitted from a chapter; passing findings still require chapter-linked support. Claims default to corroborated support; attributed is restricted to source claims, and internal_check to observations checking an original's consistency. These limited judgments still require semantic review and cannot establish general effectiveness. Acquisition checks remain separate from report readiness.
 
 Node details scroll independently and close by folding the docked sidebar. Titles use 20px, section headings 18px, body text and quotations 16px, and metadata 14px. Execution history has a central entry. Reports link evidence with sentence-level superscripts; original figures accompany explanations. The readable project folder contains the task, original materials, evidence, analysis, deliverables, update history and an overview.
 
@@ -72,6 +76,8 @@ YouTube embedding can be restricted by platform policy or host configuration; or
 ## Development
 
 Run npm test and npm run build:client in this package. The engine-manifest.json hashes cover the bundled engine runtime; changes to that runtime require a new verified manifest and writable runtime directory. Research data and credentials do not belong in this repository or release archives.
+
+The reviewed Python files live in engine-patch/files. Run node scripts/update-engine-manifest.mjs after editing them; this validates existing bundled bytes, refreshes the patch inventory and prepares a new runtime identifier. Offline engine regressions run with npm run test:engine. Existing payloads omit absent research fields when serialized, preserving historical fingerprints. Readers predating these fields cannot read newly authored payloads; retain their original runtimes and avoid downgrading a workspace with new records.
 
 ## Dev note
 

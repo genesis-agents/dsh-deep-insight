@@ -164,7 +164,7 @@ class ResearchService:
         with self.tx(None) as repo:
             frozen = repo.frozen_input(run_id)
             all_evidence = {e.evidence_id: e for e in repo.evidence(run_id)}
-            if set(c.subquestion for c in coverage) != set(
+            if {c.subquestion for c in coverage} != set(
                 frozen.project.subquestions
             ) or len(coverage) != len(frozen.project.subquestions):
                 raise PlatformError(
@@ -438,7 +438,7 @@ class ResearchService:
         )
         # Legacy runs remain readable, but their undeclared channel scope never passes a new evaluation.
         source_ok = source_ok and collection["complete"]
-        source_ok = source_ok and all(g.state == "passed" for g in readiness)
+        readiness_ok = all(g.state == "passed" for g in readiness)
         semantic_ok = bool(
             analysis
             and verification
@@ -452,6 +452,7 @@ class ResearchService:
             and review.decision == "accepted"
             and required_checks <= set(review.checked_items)
             and source_ok
+            and readiness_ok
             and citations_ok
             and semantic_ok
         )
@@ -496,7 +497,7 @@ class ResearchService:
             "reviewed"
             if reviewed
             else "machine_verified"
-            if source_ok and citations_ok and semantic_ok
+            if source_ok and readiness_ok and citations_ok and semantic_ok
             else "evidence_incomplete"
             if not source_ok
             else "draft"
@@ -567,6 +568,23 @@ class ResearchService:
                     frozen.plan.limits.network_requests,
                 )
             if kind == "search_completed":
+                if frozen.project.research_design is not None:
+                    results, assignments = payload.get("results"), payload.get("assignments")
+                    if (
+                        not isinstance(results, list) or not isinstance(assignments, list)
+                        or len(results) != len(assignments) or not results
+                        or any(
+                            not isinstance(row, dict) or not isinstance(assignment, dict)
+                            or row.get("query") != assignment.get("query")
+                            or row.get("question") != assignment.get("question")
+                            or row.get("question") not in frozen.project.subquestions
+                            or not isinstance(row.get("sources"), list)
+                            or type(row.get("truncated")) is not bool
+                            for row, assignment in zip(results, assignments, strict=True)
+                        )
+                        or [row.get("query") for row in assignments] != payload.get("queries")
+                    ):
+                        raise PlatformError("INVALID_SPEC", "Search results must preserve every query and its assigned question")
                 if not payload.get("queries") or not isinstance(
                     payload.get("sources"), list
                 ):
@@ -586,6 +604,7 @@ class ResearchService:
                     == payload.get("execution_ref")
                     and e["payload"].get("queries") == payload.get("queries")
                     and e["payload"].get("questions") == payload.get("questions")
+                    and e["payload"].get("assignments") == payload.get("assignments")
                     for e in repo.events(run_id)
                 ):
                     raise PlatformError(

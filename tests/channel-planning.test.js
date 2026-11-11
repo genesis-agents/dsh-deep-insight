@@ -19,6 +19,8 @@ test('project execution rejects silently omitted social channels and accepts jus
   await assert.rejects(research.call(actor, { action: 'project', data }, signal), error => error.code === 'CHANNEL_PLAN_REQUIRED' && error.message.includes('youtube, x'))
   assert.deepEqual(commands, [])
   data.collection_requirements = researchChannels.map(channel => ({ channel, disposition: channel === 'local' ? 'required' : 'excluded', rationale: 'User requested only a review of the supplied document' }))
+  await assert.rejects(research.call(actor, {action:'project',data}, signal), {code:'RESEARCH_DESIGN_REQUIRED'})
+  data.research_design = []
   assert.deepEqual(await research.call(actor, { action: 'project', data }, signal), { saved: true })
   assert.deepEqual(commands, ['init', 'project'])
   t.assert.snapshot(researchPolicy.channelPlanning)

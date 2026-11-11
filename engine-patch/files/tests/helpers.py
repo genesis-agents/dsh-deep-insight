@@ -28,6 +28,8 @@ def start_case(
     content=None,
     limits=None,
     suffix=".txt",
+    quality_standard=None,
+    research_design=None,
 ):
     default_text = "Synthetic technical fixture: throughput doubled only for a fixed batch of 32. This is not an observed business fact."
     if profile == "industry":
@@ -37,7 +39,8 @@ def start_case(
     path.write_text(text, encoding="utf-8")
     project = app.projects.define_project(
         ProjectSpec(
-            quality_standard=ResearchStandard(
+            research_design=research_design,
+            quality_standard=quality_standard or ResearchStandard(
                 min_supporting_groups=1,
                 require_publication_dates=False,
                 require_search_record=False,

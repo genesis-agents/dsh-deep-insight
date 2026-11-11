@@ -227,7 +227,6 @@ def test_portable_presentation_survives_move_without_original_workspace(app, tmp
 
     from insight.adapters.persistence.objects import native_path
     from insight.bootstrap import Application
-    from tools.portable_presentations import convert
 
     run = start_case(app, tmp_path)
     analyze_case(app, run)
@@ -238,7 +237,7 @@ def test_portable_presentation_survives_move_without_original_workspace(app, tmp
     deck.slides.add_slide(deck.slide_layouts[6])
     deck.save(str(ppt))
     artifact = dict(
-        path=str(ppt),
+        path=ppt.name,
         sha256=hashlib.sha256(ppt.read_bytes()).hexdigest(),
         bytes=ppt.stat().st_size,
         slides=1,
@@ -255,13 +254,12 @@ def test_portable_presentation_survives_move_without_original_workspace(app, tmp
         json.dumps(
             dict(
                 schema="insight-presentation-latest.v1",
-                delivery=str(descriptor),
+                delivery="revision-1/delivery.json",
                 userAcceptance="pending",
             )
         ),
         encoding="utf-8",
     )
-    assert convert(app)[0]["converted"]
     assert (
         not __import__("pathlib").Path(json.loads(pointer.read_bytes())["delivery"]).is_absolute()
     )

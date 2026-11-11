@@ -71,6 +71,7 @@ def parser() -> argparse.ArgumentParser:
     run.add_argument("--key")
     worker = sub.add_parser("worker")
     worker.add_argument("--max-jobs", type=int, default=1)
+    worker.add_argument("--run")
     status = sub.add_parser("status")
     status.add_argument("--run")
     document = sub.add_parser("document")
@@ -185,7 +186,7 @@ def dispatch(app: Application, a: argparse.Namespace) -> Any:
                 )
             processed = []
             for _ in range(a.max_jobs):
-                run_id = app.worker.run_once()
+                run_id = app.worker.run_once(a.run)
                 if run_id is None:
                     break
                 processed.append(run_id)

@@ -57,9 +57,10 @@ class AcquisitionWorker:
             + timedelta(seconds=self.lease_seconds)
         ).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
-    def run_once(self) -> str | None:
+    def run_once(self, run_id: str | None = None) -> str | None:
+        """Acquire only the selected run, or claim any queued run when no selection is supplied."""
         self.queue.recover(self.clock())
-        lease = self.queue.claim("worker_" + uuid4().hex, self.clock(), self._until())
+        lease = self.queue.claim("worker_" + uuid4().hex, self.clock(), self._until(), run_id)
         if lease is None:
             return None
         stop = threading.Event()

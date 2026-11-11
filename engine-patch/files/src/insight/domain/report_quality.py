@@ -1,6 +1,6 @@
 """Report composition checks detect empty outlines without pretending to measure analytical truth."""
 
-from insight.domain.contracts import AnalysisSubmission, ReportParagraph
+from insight.domain.contracts import AnalysisSubmission, ReportParagraph, ReportTable
 
 
 def section_review_gaps(
@@ -30,6 +30,9 @@ def section_review_gaps(
         claim_ids = set(section.claim_ids)
         for block in section.blocks:
             claim_ids.update(getattr(block, "claim_ids", ()))
+            if isinstance(block, ReportTable):
+                for table_row in block.rows:
+                    claim_ids.update(table_row.claim_ids)
         evidence_ids = {
             link.evidence_id
             for claim in analysis.claims

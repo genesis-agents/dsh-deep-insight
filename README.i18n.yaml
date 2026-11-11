@@ -3,8 +3,11 @@
 # After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write plugins/deep-insight/README.md
 /:
-  en: 04a9f1ec5e42bf1c
-  zh: 1b38ba14ce97665e
+  en: cb3f91d54eee30e5
+  zh: cb3f91d54eee30e5
+/description-evidence-based-research-workspaces-for-deepseek-harness-kind-package-reference:
+  en: 5d6489eb861cde79
+  zh: 46fd9f4a413a6f6d
 /deep-insight:
   en: cf89344a33e93dfc
   zh: 20d3af4f64398100
@@ -12,14 +15,14 @@
   en: f860c775d07815bc
   zh: f8da731a9092cfe9
 /deep-insight/table-of-contents:
-  en: 38076073fe539a32
-  zh: fe961c212ef1565e
+  en: 5a66b30edc4efccc
+  zh: 88e3fb4ce22e348c
 /deep-insight/install:
   en: 7caeb7054a781288
   zh: 3d39cbf2cde6f604
 /deep-insight/use:
-  en: 2d8a888c0986d526
-  zh: a91d19933fb1ff59
+  en: 25d6757d35e63681
+  zh: e5680d8e6f207e0f
 /deep-insight/model-experience:
   en: de2dd3a7bbd66afa
   zh: bb2dd486ecfae454
@@ -27,8 +30,8 @@
   en: 5c8aafa5fddd29da
   zh: 5c04cba36e9bdda6
 /deep-insight/development:
-  en: 022a401715487bd5
-  zh: 9e9562ec1c2cc8ef
+  en: 9f8a9386b9fb642e
+  zh: d91d3e04f976369a
 /deep-insight/dev-note:
   en: aac555e4b8737709
   zh: 733c89d6e15fb47c
